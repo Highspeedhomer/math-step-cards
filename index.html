@@ -669,6 +669,250 @@ const PROBLEMS = [
         M("misc","Square root of both sides, positive only","x = 5","(−5)² = 25 too. The ± catches both."),
         M("div","Divide both sides by 2","x = 12.5","x² means x times x, not 2 times x."),
         M("mul","Square both sides","x⁴ = 625","Squaring goes the wrong direction.")]}
+    ]},
+
+  /* ---------- Linear Two-Step (more) ---------- */
+  { id:"p12", cat:"linear", sport:"🏀 A 6-man rotation scored the same each, plus 4 bench points, for 40 total.",
+    answer:"x = 6", check:"6(6) + 4 = 36 + 4 = 40 ✓",
+    steps:[
+      {eq:"6x + 4 = 40", ok:M("sub","Subtract 4 from both sides","6x = 36"), no:[
+        M("add","Add 4 to both sides","6x + 8 = 44","The +4 doubled instead of cancelling."),
+        M("mul","Multiply both sides by 6","36x + 24 = 240","Bigger numbers, x no closer to alone."),
+        M("misc","Combine 6x + 4 into 10x","10x = 40","6x and 4 aren't like terms.")]},
+      {eq:"6x = 36", ok:M("div","Divide both sides by 6","x = 6"), no:[
+        M("sub","Subtract 6 from both sides","6x − 6 = 30","6x means 6 times x. Subtracting doesn't undo it."),
+        M("mul","Multiply both sides by 6","36x = 216","The coefficient got bigger."),
+        M("add","Add 6 to both sides","6x + 6 = 42","Adding moves away from x alone.")]}
+    ]},
+  { id:"p13", cat:"linear", sport:"⛳ Golf: scores under par are negative numbers. Watch the sign on this one.",
+    answer:"x = −6", check:"8 − 2(−6) = 8 + 12 = 20 ✓",
+    steps:[
+      {eq:"8 − 2x = 20", ok:M("sub","Subtract 8 from both sides","−2x = 12"), no:[
+        M("add","Add 8 to both sides","16 − 2x = 28","The 8 doubled instead of cancelling."),
+        M("misc","Combine 8 − 2x into 6x","6x = 20","8 and −2x aren't like terms."),
+        M("mul","Multiply both sides by 2","16 − 4x = 40","Bigger numbers, x no closer to alone.")]},
+      {eq:"−2x = 12", ok:M("div","Divide both sides by −2","x = −6"), no:[
+        M("add","Add 2 to both sides","−2x + 2 = 14","−2x means −2 times x. Adding doesn't undo it."),
+        M("mul","Multiply both sides by −2","4x = −24","That makes the coefficient bigger, not 1."),
+        M("sub","Subtract 12 from both sides","−2x − 12 = 0","That moves the answer away instead of freeing x.")]}
+    ]},
+  { id:"p14", cat:"linear", sport:"⚾ Strikeout race: one pitcher has 7 a start minus 5, the other 3 a start plus 19. When do they match?",
+    answer:"x = 6", check:"7(6) − 5 = 37 and 3(6) + 19 = 37 ✓",
+    steps:[
+      {eq:"7x − 5 = 3x + 19", ok:M("sub","Subtract 3x from both sides","4x − 5 = 19"), no:[
+        M("add","Add 3x to both sides","10x − 5 = 6x + 19","x-terms grew on both sides."),
+        M("misc","Combine 7x − 5 into 2x","2x = 3x + 19","7x and −5 aren't like terms."),
+        M("mul","Multiply both sides by 3","21x − 15 = 9x + 57","Legal, but x is still on both sides.")]},
+      {eq:"4x − 5 = 19", ok:M("add","Add 5 to both sides","4x = 24"), no:[
+        M("sub","Subtract 5 from both sides","4x − 10 = 14","The −5 grew into −10."),
+        M("mul","Multiply both sides by 4","16x − 20 = 76","Bigger numbers, x no closer to alone."),
+        M("misc","Combine 4x − 5 into −x","−x = 19","4x and −5 aren't like terms.")]},
+      {eq:"4x = 24", ok:M("div","Divide both sides by 4","x = 6"), no:[
+        M("sub","Subtract 4 from both sides","4x − 4 = 20","4x means 4 times x. Subtracting doesn't undo it."),
+        M("mul","Multiply both sides by 4","16x = 96","The coefficient got bigger."),
+        M("add","Add 24 to both sides","4x + 24 = 48","Adding moves away from x alone.")]}
+    ]},
+  { id:"p15", cat:"linear", sport:"🏎️ A quarter of the race laps, minus 3 caution laps, left 2 green-flag laps in the stint.",
+    answer:"x = 20", check:"20/4 − 3 = 5 − 3 = 2 ✓",
+    steps:[
+      {eq:"x/4 − 3 = 2", ok:M("add","Add 3 to both sides","x/4 = 5"), no:[
+        M("sub","Subtract 3 from both sides","x/4 − 6 = −1","The −3 grew into −6."),
+        M("div","Divide both sides by 4","x/16 − ¾ = ½","x is already divided by 4. Dividing again goes the wrong way."),
+        M("mul","Multiply both sides by 3","(3/4)x − 9 = 6","3 doesn't clear the 4, and the constant grew.")]},
+      {eq:"x/4 = 5", ok:M("mul","Multiply both sides by 4","x = 20"), no:[
+        M("div","Divide both sides by 4","x/16 = 5/4","x is divided by 4. The opposite of dividing is multiplying."),
+        M("sub","Subtract 4 from both sides","x/4 − 4 = 1","Subtracting doesn't undo a division."),
+        M("add","Add 4 to both sides","x/4 + 4 = 9","Adding doesn't undo a division.")]}
+    ]},
+
+  /* ---------- Fractions & LCD (more) ---------- */
+  { id:"p16", cat:"fractions", sport:"🏀 Half a player's points came on twos and a third on threes. Together that's 10 points.",
+    answer:"x = 12", check:"12/2 + 12/3 = 6 + 4 = 10 ✓",
+    steps:[
+      {eq:"x/2 + x/3 = 10", ok:M("mul","Multiply every term by 6 (the LCD)","3x + 2x = 60"), no:[
+        M("mul","Multiply every term by 2","x + (2/3)x = 20","The thirds survive. 2 isn't a multiple of 3."),
+        M("mul","Multiply every term by 5","(5/2)x + (5/3)x = 50","2 + 3 = 5, but the LCD comes from multiplying: 2 × 3 = 6."),
+        M("misc","Add straight across: tops and bottoms","2x/5 = 10","Fractions need a common denominator before the tops add.")]},
+      {eq:"3x + 2x = 60", ok:M("misc","Combine like terms: 3x + 2x","5x = 60"), no:[
+        M("mul","Multiply 3x by 2x","6x² = 60","Like terms add together. They don't multiply."),
+        M("sub","Subtract 3x from both sides","2x = 60 − 3x","That splits like terms apart instead of combining them."),
+        M("div","Divide every term by 3","x + (2/3)x = 20","That brings a fraction back.")]},
+      {eq:"5x = 60", ok:M("div","Divide both sides by 5","x = 12"), no:[
+        M("sub","Subtract 5 from both sides","5x − 5 = 55","5x means 5 times x. Subtracting doesn't undo it."),
+        M("mul","Multiply both sides by 5","25x = 300","The coefficient got bigger."),
+        M("add","Add 5 to both sides","5x + 5 = 65","Adding moves away from x alone.")]}
+    ]},
+  { id:"p17", cat:"fractions", sport:"⚾ Two hitters' ratios set equal: when does one's pace match the other's?",
+    answer:"x = 5", check:"(5 + 1)/3 = 2 and (5 − 1)/2 = 2 ✓",
+    steps:[
+      {eq:"(x + 1)/3 = (x − 1)/2", ok:M("mul","Multiply both sides by 6 (the LCD)","2(x + 1) = 3(x − 1)"), no:[
+        M("mul","Multiply both sides by 3","x + 1 = (3/2)(x − 1)","The halves survive. 3 isn't a multiple of 2."),
+        M("mul","Multiply both sides by 2","(2/3)(x + 1) = x − 1","The thirds survive. 2 isn't a multiple of 3."),
+        M("misc","Cancel the +1 and −1","x/3 = x/2","They sit in different fractions with different signs. They don't cancel.")]},
+      {eq:"2(x + 1) = 3(x − 1)", ok:M("misc","Distribute on both sides","2x + 2 = 3x − 3"), no:[
+        M("misc","Distribute to the x terms only","2x + 1 = 3x − 1","The outside number multiplies everything inside."),
+        M("sub","Subtract 2 from both sides","2(x + 1) − 2 = 3(x − 1) − 2","The parentheses are still locked. Distribute first."),
+        M("div","Divide both sides by 2","x + 1 = (3/2)(x − 1)","That brings a fraction right back.")]},
+      {eq:"2x + 2 = 3x − 3", ok:M("sub","Subtract 2x from both sides","2 = x − 3"), no:[
+        M("add","Add 2x to both sides","4x + 2 = 5x − 3","x-terms grew on both sides."),
+        M("misc","Combine 2x + 2 into 4x","4x = 3x − 3","2x and 2 aren't like terms."),
+        M("mul","Multiply both sides by 2","4x + 4 = 6x − 6","Bigger numbers, x still on both sides.")]},
+      {eq:"2 = x − 3", ok:M("add","Add 3 to both sides","5 = x"), no:[
+        M("sub","Subtract 3 from both sides","−1 = x − 6","The −3 grew into −6."),
+        M("add","Add 2 to both sides","4 = x − 1","That moves numbers around without freeing x."),
+        M("div","Divide both sides by 3","2/3 = x/3 − 1","x had no 3 attached. That adds a fraction.")]}
+    ]},
+  { id:"p18", cat:"fractions", sport:"🏀 True Shooting uses 0.44 per free throw. Decimals are just fractions in disguise: 0.25 = ¼.",
+    answer:"x = 10", check:"0.25(10) + 1.5 = 2.5 + 1.5 = 4 ✓",
+    steps:[
+      {eq:"0.25x + 1.5 = 4", ok:M("sub","Subtract 1.5 from both sides","0.25x = 2.5"), no:[
+        M("add","Add 1.5 to both sides","0.25x + 3 = 5.5","The +1.5 doubled instead of cancelling."),
+        M("misc","Combine 0.25x + 1.5 into 1.75x","1.75x = 4","0.25x and 1.5 aren't like terms."),
+        M("div","Divide both sides by 1.5","(1/6)x + 1 = 8/3","Creates messier fractions, x no closer to alone.")]},
+      {eq:"0.25x = 2.5", ok:M("mul","Multiply both sides by 4 (because 0.25 = ¼)","x = 10"), no:[
+        M("mul","Multiply both sides by 0.25","0.0625x = 0.625","That shrinks x's coefficient further. 4 is the flip of ¼."),
+        M("sub","Subtract 0.25 from both sides","0.25x − 0.25 = 2.25","0.25 is multiplying x. Subtracting doesn't undo it."),
+        M("add","Add 0.75 to both sides","0.25x + 0.75 = 3.25","Adding doesn't turn a coefficient into 1.")]}
+    ]},
+
+  /* ---------- Distributive & Multi-Step (more) ---------- */
+  { id:"p19", cat:"distributive", sport:"🏈 Four drives of (x − 3) yards each equaled two drives of x plus a 6-yard penalty.",
+    answer:"x = 9", check:"4(9 − 3) = 24 and 2(9) + 6 = 24 ✓",
+    steps:[
+      {eq:"4(x − 3) = 2x + 6", ok:M("misc","Distribute the 4 into the parentheses","4x − 12 = 2x + 6"), no:[
+        M("misc","Distribute the 4 to x only","4x − 3 = 2x + 6","The 4 multiplies the −3 too."),
+        M("add","Add 3 to both sides","4(x − 3) + 3 = 2x + 9","The −3 is locked inside the parentheses."),
+        M("mul","Multiply both sides by 4","16(x − 3) = 8x + 24","Bigger numbers and the parentheses are still there.")]},
+      {eq:"4x − 12 = 2x + 6", ok:M("sub","Subtract 2x from both sides","2x − 12 = 6"), no:[
+        M("add","Add 2x to both sides","6x − 12 = 4x + 6","x-terms grew on both sides."),
+        M("misc","Combine 4x − 12 into −8x","−8x = 2x + 6","4x and −12 aren't like terms."),
+        M("mul","Multiply both sides by 2","8x − 24 = 4x + 12","Bigger numbers, x still on both sides.")]},
+      {eq:"2x − 12 = 6", ok:M("add","Add 12 to both sides","2x = 18"), no:[
+        M("sub","Subtract 12 from both sides","2x − 24 = −6","The −12 grew into −24."),
+        M("div","Divide both sides by 12","x/6 − 1 = ½","Creates fractions, x no closer to alone."),
+        M("misc","Combine 2x − 12 into −10x","−10x = 6","2x and −12 aren't like terms.")]},
+      {eq:"2x = 18", ok:M("div","Divide both sides by 2","x = 9"), no:[
+        M("sub","Subtract 2 from both sides","2x − 2 = 16","2x means 2 times x. Subtracting doesn't undo it."),
+        M("mul","Multiply both sides by 2","4x = 36","The coefficient doubled."),
+        M("add","Add 18 to both sides","2x + 18 = 36","Adding moves away from x alone.")]}
+    ]},
+  { id:"p20", cat:"distributive", sport:"⚾ Box score math: distribute first, then combine like terms, just like totaling bases.",
+    answer:"x = 3", check:"5(2·3 + 1) − 3·3 = 35 − 9 = 26 ✓",
+    steps:[
+      {eq:"5(2x + 1) − 3x = 26", ok:M("misc","Distribute the 5 into the parentheses","10x + 5 − 3x = 26"), no:[
+        M("misc","Distribute the 5 to 2x only","10x + 1 − 3x = 26","The 5 multiplies the +1 too."),
+        M("sub","Subtract 1 from both sides","5(2x + 1) − 3x − 1 = 25","The +1 is locked inside the parentheses."),
+        M("mul","Multiply both sides by 5","25(2x + 1) − 15x = 130","Bigger numbers and the parentheses are still there.")]},
+      {eq:"10x + 5 − 3x = 26", ok:M("misc","Combine like terms: 10x − 3x","7x + 5 = 26"), no:[
+        M("misc","Combine 10x + 5 into 15x","15x − 3x = 26","10x and 5 aren't like terms."),
+        M("misc","Combine 5 − 3x into 2x","10x + 2x = 26","5 and −3x aren't like terms."),
+        M("div","Divide every term by 10","x + 0.5 − 0.3x = 2.6","Creates decimals before cleaning up.")]},
+      {eq:"7x + 5 = 26", ok:M("sub","Subtract 5 from both sides","7x = 21"), no:[
+        M("add","Add 5 to both sides","7x + 10 = 31","The +5 doubled instead of cancelling."),
+        M("mul","Multiply both sides by 7","49x + 35 = 182","Bigger numbers, x no closer to alone."),
+        M("misc","Combine 7x + 5 into 12x","12x = 26","7x and 5 aren't like terms.")]},
+      {eq:"7x = 21", ok:M("div","Divide both sides by 7","x = 3"), no:[
+        M("sub","Subtract 7 from both sides","7x − 7 = 14","7x means 7 times x. Subtracting doesn't undo it."),
+        M("mul","Multiply both sides by 7","49x = 147","The coefficient got bigger."),
+        M("add","Add 7 to both sides","7x + 7 = 28","Adding moves away from x alone.")]}
+    ]},
+  { id:"p21", cat:"distributive", sport:"⛳ Golf: −2 strokes on each of (x − 5) holes. Negative times negative matters here.",
+    answer:"x = −4", check:"−2(−4 − 5) = −2(−9) = 18 ✓",
+    steps:[
+      {eq:"−2(x − 5) = 18", ok:M("div","Divide both sides by −2","x − 5 = −9"), no:[
+        M("misc","Distribute: −2x − 10 = 18","−2x − 10 = 18","−2 times −5 is +10, not −10."),
+        M("add","Add 5 to both sides","−2(x − 5) + 5 = 23","The −5 is locked inside the parentheses."),
+        M("mul","Multiply both sides by −2","4(x − 5) = −36","The −2 is multiplying already. Multiplying again makes it bigger.")]},
+      {eq:"x − 5 = −9", ok:M("add","Add 5 to both sides","x = −4"), no:[
+        M("sub","Subtract 5 from both sides","x − 10 = −14","The −5 grew into −10."),
+        M("mul","Multiply both sides by 5","5x − 25 = −45","Now x has a coefficient it didn't need."),
+        M("div","Divide both sides by 5","x/5 − 1 = −9/5","x had no 5 attached. That adds fractions.")]}
+    ]},
+
+  /* ---------- Quadratics (more) ---------- */
+  { id:"p22", cat:"quadratics", sport:"🏀 Find two numbers that multiply to 6 and add to 5. Same puzzle as a 2-for-1 box score.",
+    answer:"x = −2 or x = −3", check:"4 − 10 + 6 = 0 ✓ · 9 − 15 + 6 = 0 ✓",
+    steps:[
+      {eq:"x² + 5x + 6 = 0", ok:M("misc","Factor: find a pair that multiplies to 6 and adds to 5","(x + 2)(x + 3) = 0"), no:[
+        M("misc","Factor as (x + 1)(x + 6)","(x + 1)(x + 6) = 0","1 × 6 = 6 ✓, but 1 + 6 = 7, not 5."),
+        M("misc","Factor as (x − 2)(x − 3)","(x − 2)(x − 3) = 0","Those multiply to 6 but add to −5."),
+        M("sub","Subtract 6 from both sides","x² + 5x = −6","Factoring needs = 0 on one side.")]},
+      {eq:"(x + 2)(x + 3) = 0", ok:M("misc","Zero-product rule: set each factor = 0","x + 2 = 0  or  x + 3 = 0"), no:[
+        M("div","Divide both sides by (x + 3)","x + 2 = 0","That throws away the x = −3 solution."),
+        M("mul","Multiply the factors back out","x² + 5x + 6 = 0","That undoes the factoring."),
+        M("misc","Read the answers straight off: x = 2 or x = 3","x = 2  or  x = 3","Solving x + 2 = 0 flips the sign: x = −2.")]},
+      {eq:"x + 2 = 0  or  x + 3 = 0", ok:M("misc","Solve each: subtract 2 from the first, subtract 3 from the second","x = −2  or  x = −3"), no:[
+        M("add","Add 2 to the first and 3 to the second","x + 4 = 2  or  x + 6 = 3","The opposite of +2 is −2."),
+        M("sub","Subtract 2 from both mini-equations","x = −2  or  x + 1 = −2","Each mini-equation needs its own opposite move."),
+        M("misc","Keep only x = −2","x = −2","Both factors give an answer. Two solutions.")]}
+    ]},
+  { id:"p23", cat:"quadratics", sport:"⚾ A negative b with a positive c means both numbers in the pair are negative.",
+    answer:"x = 2 or x = 7", check:"4 − 18 + 14 = 0 ✓ · 49 − 63 + 14 = 0 ✓",
+    steps:[
+      {eq:"x² − 9x + 14 = 0", ok:M("misc","Factor: find a pair that multiplies to 14 and adds to −9","(x − 2)(x − 7) = 0"), no:[
+        M("misc","Factor as (x + 2)(x + 7)","(x + 2)(x + 7) = 0","Those add to +9. You need −9."),
+        M("misc","Factor as (x − 1)(x − 14)","(x − 1)(x − 14) = 0","−1 × −14 = 14 ✓, but −1 + −14 = −15, not −9."),
+        M("misc","Quadratic formula with b = 9 (sign dropped)","x = (−9 ± √25) / 2","b is −9, so −b is +9. The sign matters.")]},
+      {eq:"(x − 2)(x − 7) = 0", ok:M("misc","Zero-product rule: set each factor = 0","x − 2 = 0  or  x − 7 = 0"), no:[
+        M("div","Divide both sides by (x − 2)","x − 7 = 0","That throws away the x = 2 solution."),
+        M("mul","Multiply the factors back out","x² − 9x + 14 = 0","That undoes the factoring."),
+        M("add","Add 7 to both sides","(x − 2)(x − 7) + 7 = 7","The right side isn't 0 anymore, so zero-product can't be used.")]},
+      {eq:"x − 2 = 0  or  x − 7 = 0", ok:M("misc","Solve each: add 2 to the first, add 7 to the second","x = 2  or  x = 7"), no:[
+        M("sub","Subtract 2 and subtract 7","x − 4 = −2  or  x − 14 = −7","The opposite of −2 is +2."),
+        M("add","Add 2 to both mini-equations","x = 2  or  x − 5 = 2","Each mini-equation needs its own opposite move."),
+        M("misc","Keep only x = 7","x = 7","Both factors give an answer. Two solutions.")]}
+    ]},
+  { id:"p24", cat:"quadratics", sport:"🏎️ Braking distance grows with speed squared. Isolate the square, then root it.",
+    answer:"x = 4 or x = −4", check:"3(16) + 2 = 50 ✓ for both",
+    steps:[
+      {eq:"3x² + 2 = 50", ok:M("sub","Subtract 2 from both sides","3x² = 48"), no:[
+        M("add","Add 2 to both sides","3x² + 4 = 52","The +2 doubled instead of cancelling."),
+        M("misc","Take the square root of both sides now","√(3x² + 2) = √50","The +2 is stuck under the root. Isolate x² first."),
+        M("mul","Multiply both sides by 3","9x² + 6 = 150","Bigger numbers, x² no closer to alone.")]},
+      {eq:"3x² = 48", ok:M("div","Divide both sides by 3","x² = 16"), no:[
+        M("sub","Subtract 3 from both sides","3x² − 3 = 45","3x² means 3 times x². Subtracting doesn't undo it."),
+        M("add","Add 3 to both sides","3x² + 3 = 51","Adding moves away from x² alone."),
+        M("misc","Halve the exponent: 3x = 48","3x = 48","Exponents are undone by square roots, not by halving.")]},
+      {eq:"x² = 16", ok:M("misc","Square root of both sides, with ±","x = 4  or  x = −4"), no:[
+        M("misc","Square root of both sides, positive only","x = 4","(−4)² = 16 too. The ± catches both."),
+        M("div","Divide both sides by 2","x = 8","x² means x times x, not 2 times x."),
+        M("mul","Square both sides","x⁴ = 256","Squaring goes the wrong direction.")]}
+    ]},
+  { id:"p25", cat:"quadratics", sport:"🏈 When a > 1, factoring gets tricky. The quadratic formula always works.",
+    answer:"x = 1.5 or x = −2", check:"2(2.25) + 1.5 − 6 = 0 ✓ · 2(4) − 2 − 6 = 0 ✓",
+    steps:[
+      {eq:"2x² + x − 6 = 0", ok:M("misc","Quadratic formula with a = 2, b = 1, c = −6","x = (−1 ± √49) / 4"), no:[
+        M("misc","Quadratic formula with c = 6 (sign dropped)","x = (−1 ± √−47) / 4","c is −6, so −4ac = +48 and D = 49."),
+        M("div","Quadratic formula, but divide by 2 instead of 2a","x = (−1 ± √49) / 2","The bottom is 2a, and a = 2, so 2a = 4."),
+        M("misc","Factor as (x − 2)(x + 3)","(x − 2)(x + 3) = 0 → x² + x − 6","That's missing the 2 in front of x².")]},
+      {eq:"x = (−1 ± √49) / 4", ok:M("misc","Calculate the root: √49 = 7","x = (−1 ± 7) / 4"), no:[
+        M("div","Halve 49 instead: 24.5","x = (−1 ± 24.5) / 4","Square root asks what times itself makes 49. That's 7."),
+        M("misc","Drop the ± and use + only","x = (−1 + 7) / 4","The ± means two answers. Keep both."),
+        M("add","Add −1 and 49 under the root","x = √48 / 4","The −1 sits outside the root. Only D goes under it.")]},
+      {eq:"x = (−1 ± 7) / 4", ok:M("misc","Form both versions: (−1 + 7)/4 and (−1 − 7)/4","x = 1.5  or  x = −2"), no:[
+        M("misc","Use only the + version","x = 1.5","The ± means two answers. Both count."),
+        M("misc","Flip the −1 in the second version: (1 − 7)/4","x = 1.5  or  x = −1.5","−b stays −1 in both versions. Only the ± changes."),
+        M("div","Divide only the 7 by 4","x = −1 ± 1.75","The / 4 applies to the whole top.")]}
+    ]},
+  { id:"p26", cat:"quadratics", sport:"🏈 Not in standard form yet. Step 1 is getting it to = 0.",
+    answer:"x = −7 or x = 3", check:"49 − 28 = 21 ✓ · 9 + 12 = 21 ✓",
+    steps:[
+      {eq:"x² + 4x = 21", ok:M("sub","Subtract 21 from both sides","x² + 4x − 21 = 0"), no:[
+        M("add","Add 21 to both sides","x² + 4x + 21 = 42","The right side doubled instead of becoming 0."),
+        M("misc","Take the square root of both sides","√(x² + 4x) = √21","Square roots only help when x² is alone. There's an x-term here too."),
+        M("div","Divide both sides by x","x + 4 = 21/x","Dividing by x can lose a solution and creates a fraction.")]},
+      {eq:"x² + 4x − 21 = 0", ok:M("misc","Factor: find a pair that multiplies to −21 and adds to 4","(x + 7)(x − 3) = 0"), no:[
+        M("misc","Factor as (x − 7)(x + 3)","(x − 7)(x + 3) = 0","Those add to −4. You need +4."),
+        M("misc","Factor as (x + 21)(x − 1)","(x + 21)(x − 1) = 0","21 × −1 = −21 ✓, but 21 + −1 = 20, not 4."),
+        M("misc","Pull out an x: x(x + 4) − 21 = 0","x(x + 4) − 21 = 0","The −21 is left over, so it isn't a product equal to 0.")]},
+      {eq:"(x + 7)(x − 3) = 0", ok:M("misc","Zero-product rule: set each factor = 0","x + 7 = 0  or  x − 3 = 0"), no:[
+        M("div","Divide both sides by (x − 3)","x + 7 = 0","That throws away the x = 3 solution."),
+        M("mul","Multiply the factors back out","x² + 4x − 21 = 0","That undoes the factoring."),
+        M("misc","Read the answers straight off: x = 7 or x = −3","x = 7  or  x = −3","Solving x + 7 = 0 flips the sign: x = −7.")]},
+      {eq:"x + 7 = 0  or  x − 3 = 0", ok:M("misc","Solve each: subtract 7 from the first, add 3 to the second","x = −7  or  x = 3"), no:[
+        M("add","Add 7 to both mini-equations","x + 14 = 7  or  x + 4 = 7","The opposite of +7 is −7, and each side needs its own move."),
+        M("sub","Subtract 3 from both mini-equations","x + 4 = −3  or  x − 6 = −3","The opposite of −3 is +3, and each side needs its own move."),
+        M("misc","Keep only x = 3","x = 3","Both factors give an answer. Two solutions.")]}
     ]}
 ];
 
