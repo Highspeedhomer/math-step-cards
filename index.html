@@ -1,0 +1,1948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Math Steps">
+  <meta name="theme-color" content="#1a56db">
+  <title>Ryan's Math Step Cards</title>
+  <style>
+    /* ==========================================================================
+       ACCESSIBILITY & CSS DESIGN SYSTEM
+       - High-contrast, calm palette, low visual noise
+       - Giant touch targets (minimum 58px, standard 64px-76px)
+       - Generous spacing (16px-24px) to prevent accidental mis-taps
+       - Large, readable typography
+       ========================================================================== */
+    :root {
+      --bg-app: #f4f6fa;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #ffffff;
+      --bg-accent-soft: #e8f0fe;
+      --bg-sports-soft: #fff4e5;
+      --bg-example-soft: #eef7ee;
+      
+      --text-main: #141c2b;
+      --text-muted: #3d4f68;
+      --text-inverse: #ffffff;
+
+      --primary: #1a56db;
+      --primary-hover: #1442a8;
+      --primary-active: #0e307c;
+      --primary-focus: #93b4ff;
+
+      --success: #0d7844;
+      --success-hover: #095932;
+      --success-soft: #d8f3e5;
+
+      --sports-border: #f59e0b;
+      --sports-text: #854d0e;
+
+      --example-border: #10b981;
+      --example-text: #065f46;
+
+      --border-subtle: #cbd5e1;
+      --border-strong: #94a3b8;
+      --border-focus: #1a56db;
+
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --font-size-base: 19px;
+      --font-size-lg: 23px;
+      --font-size-xl: 28px;
+      --font-size-title: 34px;
+
+      --touch-min: 58px;
+      --border-radius-card: 18px;
+      --border-radius-btn: 14px;
+      --shadow-card: 0 4px 14px rgba(0, 0, 0, 0.08);
+      --shadow-focus: 0 0 0 4px rgba(26, 86, 219, 0.4);
+    }
+
+    /* High Contrast Mode */
+    body.high-contrast {
+      --bg-app: #000000;
+      --bg-surface: #121212;
+      --bg-surface-elevated: #1e1e1e;
+      --bg-accent-soft: #0c2340;
+      --bg-sports-soft: #2e1d05;
+      --bg-example-soft: #052614;
+
+      --text-main: #ffffff;
+      --text-muted: #e2e8f0;
+      --text-inverse: #000000;
+
+      --primary: #60a5fa;
+      --primary-hover: #93c5fd;
+      --primary-active: #bfdbfe;
+      --primary-focus: #ffffff;
+
+      --success: #34d399;
+      --success-hover: #6ee7b7;
+      --success-soft: #064e3b;
+
+      --sports-border: #fbbf24;
+      --sports-text: #fef08a;
+
+      --example-border: #34d399;
+      --example-text: #a7f3d0;
+
+      --border-subtle: #64748b;
+      --border-strong: #cbd5e1;
+      --border-focus: #ffffff;
+
+      --shadow-card: 0 4px 20px rgba(255, 255, 255, 0.12);
+      --shadow-focus: 0 0 0 5px #ffffff;
+    }
+
+    /* Extra Large Text Mode */
+    body.text-xl {
+      --font-size-base: 22px;
+      --font-size-lg: 27px;
+      --font-size-xl: 32px;
+      --font-size-title: 40px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: rgba(26, 86, 219, 0.2);
+    }
+
+    body {
+      font-family: var(--font-family);
+      font-size: var(--font-size-base);
+      line-height: 1.5;
+      color: var(--text-main);
+      background-color: var(--bg-app);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 60px;
+    }
+
+    /* Focus styling for keyboard and switch accessibility */
+    :focus-visible {
+      outline: 4px solid var(--border-focus) !important;
+      outline-offset: 4px !important;
+    }
+
+    button, input, select {
+      font: inherit;
+    }
+
+    /* Header & Top Bar */
+    .app-header {
+      background: var(--bg-surface);
+      border-bottom: 3px solid var(--border-subtle);
+      padding: 16px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .header-container {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-title {
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .brand-tagline {
+      font-size: 0.85em;
+      color: var(--text-muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .header-controls {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-utility {
+      min-height: var(--touch-min);
+      min-width: var(--touch-min);
+      padding: 10px 18px;
+      background: var(--bg-accent-soft);
+      color: var(--text-main);
+      border: 2px solid var(--border-subtle);
+      border-radius: var(--border-radius-btn);
+      font-weight: 700;
+      font-size: 0.95em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.15s ease, transform 0.1s ease;
+    }
+
+    .btn-utility:hover {
+      background: var(--border-subtle);
+    }
+
+    .btn-utility:active {
+      transform: scale(0.97);
+    }
+
+    /* Helper Boundary Info Line */
+    .helper-banner {
+      background: var(--bg-accent-soft);
+      border-bottom: 2px solid var(--border-subtle);
+      padding: 14px 20px;
+    }
+
+    .helper-banner-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.92em;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .helper-banner-inner strong {
+      color: var(--text-main);
+    }
+
+    .helper-icon {
+      font-size: 1.3em;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    /* Main Container */
+    .main-content {
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 20px;
+      flex: 1;
+    }
+
+    /* View Switcher Container */
+    .view-section {
+      display: none;
+    }
+
+    .view-section.active {
+      display: block;
+      animation: fadeIn 0.2s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ==========================================================================
+       LIBRARY VIEW (Max 2 taps to start any procedure)
+       ========================================================================== */
+    .library-header {
+      margin-bottom: 24px;
+    }
+
+    .page-title {
+      font-size: var(--font-size-title);
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .page-subtitle {
+      font-size: var(--font-size-lg);
+      color: var(--text-muted);
+    }
+
+    /* Category Filter Pills */
+    .category-filter-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin: 20px 0 28px 0;
+    }
+
+    .filter-btn {
+      min-height: var(--touch-min);
+      padding: 12px 22px;
+      border-radius: 30px;
+      border: 3px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-weight: 700;
+      font-size: 1em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.15s ease;
+    }
+
+    .filter-btn[aria-pressed="true"],
+    .filter-btn.active {
+      background: var(--primary);
+      color: var(--text-inverse);
+      border-color: var(--primary);
+    }
+
+    /* Card Library Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 680px) {
+      .cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+      }
+    }
+
+    /* Step Card Item in Library */
+    .procedure-card-item {
+      background: var(--bg-surface);
+      border: 3px solid var(--border-subtle);
+      border-radius: var(--border-radius-card);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: left;
+      cursor: pointer;
+      width: 100%;
+      min-height: 200px;
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      position: relative;
+    }
+
+    .procedure-card-item:hover {
+      border-color: var(--primary);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .procedure-card-item:active {
+      transform: scale(0.98);
+    }
+
+    .card-item-top {
+      margin-bottom: 16px;
+    }
+
+    .card-category-tag {
+      display: inline-block;
+      font-size: 0.85em;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 4px 12px;
+      border-radius: 8px;
+      background: var(--bg-accent-soft);
+      color: var(--primary);
+      margin-bottom: 12px;
+    }
+
+    .card-item-title {
+      font-size: var(--font-size-lg);
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .card-item-desc {
+      font-size: 0.95em;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .card-item-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 16px;
+      border-top: 2px solid var(--border-subtle);
+      margin-top: 16px;
+      gap: 12px;
+    }
+
+    .card-step-count {
+      font-size: 0.9em;
+      font-weight: 700;
+      color: var(--text-muted);
+    }
+
+    .card-progress-pill {
+      font-size: 0.85em;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: var(--bg-accent-soft);
+      color: var(--primary);
+    }
+
+    .card-progress-pill.completed {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .btn-open-card {
+      min-height: var(--touch-min);
+      padding: 0 20px;
+      background: var(--primary);
+      color: var(--text-inverse);
+      font-weight: 800;
+      border: none;
+      border-radius: var(--border-radius-btn);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    /* ==========================================================================
+       GUIDED MODE VIEW (One step at a time)
+       ========================================================================== */
+    .guided-top-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .btn-back-library {
+      min-height: var(--touch-min);
+      padding: 12px 24px;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 3px solid var(--border-subtle);
+      border-radius: var(--border-radius-btn);
+      font-weight: 800;
+      font-size: 1em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.15s ease;
+    }
+
+    .btn-back-library:hover {
+      background: var(--bg-accent-soft);
+      border-color: var(--primary);
+    }
+
+    .guided-card-header {
+      background: var(--bg-surface);
+      border: 3px solid var(--border-subtle);
+      border-radius: var(--border-radius-card);
+      padding: 22px 26px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .guided-procedure-title {
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .guided-procedure-sub {
+      font-size: var(--font-size-base);
+      color: var(--text-muted);
+    }
+
+    /* Sports Connection Callout */
+    .sports-note-box {
+      background: var(--bg-sports-soft);
+      border: 3px solid var(--sports-border);
+      border-radius: var(--border-radius-card);
+      padding: 16px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .sports-icon {
+      font-size: 1.7em;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    .sports-text {
+      font-size: 0.95em;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+
+    .sports-title {
+      font-weight: 800;
+      color: var(--sports-text);
+      display: block;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      font-size: 0.85em;
+      letter-spacing: 0.5px;
+    }
+
+    /* Progress Indicators */
+    .progress-section {
+      margin-bottom: 24px;
+    }
+
+    .progress-text-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-weight: 800;
+      font-size: 1.05em;
+      color: var(--text-muted);
+    }
+
+    .progress-dots-container {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .progress-segment {
+      flex: 1;
+      height: 16px;
+      border-radius: 8px;
+      background: var(--border-subtle);
+      transition: background 0.25s ease;
+    }
+
+    .progress-segment.completed {
+      background: var(--success);
+    }
+
+    .progress-segment.current {
+      background: var(--primary);
+      box-shadow: 0 0 0 3px var(--bg-accent-soft);
+    }
+
+    /* THE HERO STEP CARD (Focused Attention) */
+    .hero-step-card {
+      background: var(--bg-surface);
+      border: 4px solid var(--primary);
+      border-radius: var(--border-radius-card);
+      padding: 32px 28px;
+      box-shadow: 0 8px 30px rgba(26, 86, 219, 0.15);
+      margin-bottom: 24px;
+      position: relative;
+    }
+
+    .step-badge {
+      display: inline-block;
+      font-size: 0.95em;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      padding: 8px 18px;
+      border-radius: 12px;
+      background: var(--primary);
+      color: var(--text-inverse);
+      margin-bottom: 16px;
+    }
+
+    .step-title {
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      line-height: 1.3;
+    }
+
+    .step-instruction {
+      font-size: var(--font-size-lg);
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+
+    .step-cue-box {
+      background: var(--bg-accent-soft);
+      border-left: 6px solid var(--primary);
+      border-radius: 0 12px 12px 0;
+      padding: 14px 18px;
+      font-size: 0.95em;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
+
+    .step-cue-box strong {
+      color: var(--text-main);
+    }
+
+    /* Huge Action Buttons Stack */
+    .action-buttons-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .btn-next-step {
+      min-height: 74px;
+      padding: 16px 28px;
+      background: var(--success);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--border-radius-btn);
+      font-size: var(--font-size-lg);
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      box-shadow: 0 6px 18px rgba(13, 120, 68, 0.3);
+      transition: background 0.15s ease, transform 0.1s ease;
+      width: 100%;
+    }
+
+    .btn-next-step:hover {
+      background: var(--success-hover);
+    }
+
+    .btn-next-step:active {
+      transform: scale(0.98);
+    }
+
+    .secondary-actions-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .btn-secondary-action {
+      min-height: var(--touch-min);
+      padding: 14px 18px;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 3px solid var(--border-subtle);
+      border-radius: var(--border-radius-btn);
+      font-size: 1em;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: background 0.15s ease;
+    }
+
+    .btn-secondary-action:hover {
+      background: var(--bg-accent-soft);
+      border-color: var(--border-strong);
+    }
+
+    .btn-secondary-action:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      border-color: var(--border-subtle);
+    }
+
+    /* Worked Example Accordion / Toggle */
+    .worked-example-section {
+      background: var(--bg-example-soft);
+      border: 3px solid var(--example-border);
+      border-radius: var(--border-radius-card);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .worked-example-toggle-btn {
+      width: 100%;
+      min-height: 64px;
+      padding: 16px 22px;
+      background: transparent;
+      border: none;
+      font-size: var(--font-size-base);
+      font-weight: 800;
+      color: var(--example-text);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+    }
+
+    .worked-example-toggle-btn:hover {
+      background: rgba(16, 185, 129, 0.1);
+    }
+
+    .worked-example-body {
+      padding: 0 24px 24px 24px;
+      border-top: 2px dashed var(--example-border);
+      display: none;
+    }
+
+    .worked-example-body.open {
+      display: block;
+      padding-top: 18px;
+    }
+
+    .example-problem {
+      font-size: var(--font-size-lg);
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 14px;
+      padding: 10px 16px;
+      background: var(--bg-surface);
+      border-radius: 10px;
+      display: inline-block;
+    }
+
+    .example-steps-list {
+      list-style-type: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .example-step-item {
+      padding: 12px 16px;
+      background: var(--bg-surface);
+      border-radius: 10px;
+      font-size: 0.95em;
+      line-height: 1.45;
+      color: var(--text-main);
+      border-left: 4px solid var(--example-border);
+    }
+
+    /* Completed State Screen */
+    .completion-card {
+      background: var(--bg-surface);
+      border: 4px solid var(--success);
+      border-radius: var(--border-radius-card);
+      padding: 36px 28px;
+      text-align: center;
+      margin-bottom: 24px;
+      box-shadow: 0 8px 30px rgba(13, 120, 68, 0.15);
+      display: none;
+    }
+
+    .completion-card.active {
+      display: block;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    .completion-icon {
+      font-size: 4em;
+      margin-bottom: 12px;
+      line-height: 1;
+    }
+
+    .completion-title {
+      font-size: var(--font-size-title);
+      font-weight: 900;
+      color: var(--success);
+      margin-bottom: 12px;
+    }
+
+    .final-check-box {
+      background: var(--bg-accent-soft);
+      border: 3px solid var(--primary);
+      border-radius: 14px;
+      padding: 20px;
+      margin: 24px 0;
+      text-align: left;
+    }
+
+    .final-check-label {
+      font-size: 0.85em;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--primary);
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    .final-check-text {
+      font-size: var(--font-size-lg);
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    /* Toast Notification for Undo */
+    .toast-undo {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(120px);
+      background: var(--text-main);
+      color: var(--bg-surface);
+      padding: 16px 24px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      z-index: 1000;
+      transition: transform 0.25s ease-out;
+      max-width: 90%;
+    }
+
+    .toast-undo.show {
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .btn-toast-action {
+      min-height: 48px;
+      padding: 8px 18px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 10px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 600px) {
+      .secondary-actions-row {
+        grid-template-columns: 1fr;
+      }
+      .brand-title {
+        font-size: 1.3em;
+      }
+      .page-title {
+        font-size: 1.6em;
+      }
+      .hero-step-card {
+        padding: 24px 18px;
+      }
+      .btn-next-step {
+        font-size: 1.1em;
+        min-height: 68px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- APP HEADER -->
+  <header class="app-header" role="banner">
+    <div class="header-container">
+      <div>
+        <a href="#" class="brand-title" id="logoLink" aria-label="Ryan's Math Step Cards Home">
+          <span>🎯</span> Ryan’s Math Steps
+        </a>
+        <div class="brand-tagline">Ryan does the thinking • The app does the remembering</div>
+      </div>
+      <div class="header-controls">
+        <button id="contrastToggleBtn" class="btn-utility" aria-pressed="false" aria-label="Toggle High Contrast Mode">
+          <span>🌓</span> High Contrast
+        </button>
+        <button id="textSizeToggleBtn" class="btn-utility" aria-pressed="false" aria-label="Toggle Extra Large Text">
+          <span>🔍</span> Large Text
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HELPER BOUNDARY BANNER -->
+  <aside class="helper-banner" aria-label="Helper Rule">
+    <div class="helper-banner-inner">
+      <div class="helper-icon" aria-hidden="true">💡</div>
+      <div>
+        <strong>Helper Rule:</strong> Helpers may point to the next step, but must not choose the operation or enter the answer.
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTAINER -->
+  <main id="mainContainer" class="main-content" role="main">
+
+    <!-- ==========================================================================
+         VIEW 1: CARD LIBRARY (Max 2 taps to start)
+         ========================================================================== -->
+    <section id="libraryView" class="view-section active" aria-labelledby="libraryHeading">
+      <div class="library-header">
+        <h1 id="libraryHeading" class="page-title">Choose a Math Procedure</h1>
+        <p class="page-subtitle">Tap any card below to start guided step-by-step practice.</p>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <nav class="category-filter-bar" aria-label="Filter cards by topic" id="categoryFilterBar">
+        <!-- Injected via JavaScript -->
+      </nav>
+
+      <!-- Procedures Grid -->
+      <div class="cards-grid" id="cardsGrid" role="list">
+        <!-- Injected via JavaScript -->
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         VIEW 2: GUIDED MODE (One Step At A Time)
+         ========================================================================== -->
+    <section id="guidedView" class="view-section" aria-labelledby="currentProcedureTitle">
+      
+      <!-- Top Navigation within Guided Mode -->
+      <div class="guided-top-bar">
+        <button id="btnBackToLibrary" class="btn-back-library" aria-label="Return to procedure list">
+          <span aria-hidden="true">←</span> All Cards
+        </button>
+        <div id="guidedCategoryTag" class="card-category-tag">Algebra</div>
+      </div>
+
+      <!-- Procedure Title Card -->
+      <div class="guided-card-header">
+        <h1 id="currentProcedureTitle" class="guided-procedure-title">Procedure Name</h1>
+        <p id="currentProcedureSubtitle" class="guided-procedure-sub">Procedure description</p>
+      </div>
+
+      <!-- Sports Connection Note (If available) -->
+      <div id="sportsNoteBox" class="sports-note-box" style="display: none;">
+        <div class="sports-icon" aria-hidden="true">⚾</div>
+        <div class="sports-text">
+          <span class="sports-title">Sports Connection</span>
+          <span id="sportsNoteText">Sports note text goes here.</span>
+        </div>
+      </div>
+
+      <!-- Step Progress Bar -->
+      <div class="progress-section" aria-label="Procedure progress">
+        <div class="progress-text-row">
+          <span id="stepProgressLabel">Step 1 of 4</span>
+          <span id="stepProgressPercent">25%</span>
+        </div>
+        <div class="progress-dots-container" id="progressDotsContainer" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4">
+          <!-- Step segments injected dynamically -->
+        </div>
+      </div>
+
+      <!-- THE ACTIVE HERO STEP (Only current step visible here) -->
+      <div id="heroStepCard" class="hero-step-card" aria-live="polite">
+        <div class="step-badge" id="heroStepBadge">STEP 1</div>
+        <h2 class="step-title" id="heroStepTitle">Step Title</h2>
+        <div class="step-instruction" id="heroStepInstruction">Step instruction text here.</div>
+        <div class="step-cue-box" id="heroStepCueBox">
+          <strong>Tip / Reminder:</strong> <span id="heroStepCue">Cue text</span>
+        </div>
+      </div>
+
+      <!-- PRIMARY ACTION BUTTONS (Giant Touch Targets) -->
+      <div class="action-buttons-stack" id="guidedActionsStack">
+        <button id="btnNextStep" class="btn-next-step" aria-label="Done with this step, go to next step">
+          <span>Done — Next Step</span>
+          <span aria-hidden="true">➔</span>
+        </button>
+
+        <div class="secondary-actions-row">
+          <button id="btnPrevStep" class="btn-secondary-action" aria-label="Go back to previous step">
+            <span aria-hidden="true">←</span> Previous Step
+          </button>
+          <button id="btnResetProcedure" class="btn-secondary-action" aria-label="Restart this procedure from step 1">
+            <span aria-hidden="true">↺</span> Start Over
+          </button>
+        </div>
+      </div>
+
+      <!-- WORKED EXAMPLE SECTION (Collapsible Drawer) -->
+      <div class="worked-example-section" id="workedExampleContainer">
+        <button id="toggleExampleBtn" class="worked-example-toggle-btn" aria-expanded="false" aria-controls="workedExampleBody">
+          <span>📖 Show Worked Example</span>
+          <span id="exampleArrowIcon" aria-hidden="true">▼</span>
+        </button>
+        <div id="workedExampleBody" class="worked-example-body">
+          <div class="example-problem" id="exampleProblemText">Problem: 1/4 + 2/3</div>
+          <ul class="example-steps-list" id="exampleStepsList">
+            <!-- Steps injected via JS -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- COMPLETION SCREEN (Shown after final step is completed) -->
+      <div id="completionCard" class="completion-card" role="region" aria-label="Procedure Complete">
+        <div class="completion-icon">🎉</div>
+        <h2 class="completion-title">Procedure Complete!</h2>
+        <p style="font-size: var(--font-size-lg); color: var(--text-muted); margin-bottom: 12px;">
+          You navigated every step of this sequence.
+        </p>
+
+        <div class="final-check-box">
+          <span class="final-check-label">Final Self-Check:</span>
+          <div class="final-check-text" id="finalCheckText">Did you check your final result?</div>
+        </div>
+
+        <div class="action-buttons-stack" style="margin-top: 24px;">
+          <button id="btnRepeatProcedure" class="btn-next-step" style="background: var(--primary);" aria-label="Practice this procedure again">
+            <span>↺ Practice Again from Step 1</span>
+          </button>
+          <button id="btnDoneReturnHome" class="btn-secondary-action" style="min-height: 64px;" aria-label="Return to cards library">
+            <span>← Choose Another Card</span>
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- UNDO TOAST NOTIFICATION -->
+  <div id="undoToast" class="toast-undo" role="alert" aria-live="assertive">
+    <span id="undoToastMsg">Step completed</span>
+    <button id="btnUndoToast" class="btn-toast-action" aria-label="Undo last step tap">Undo</button>
+  </div>
+
+  <!-- ==========================================================================
+       JAVASCRIPT: SINGLE SOURCE OF TRUTH CARD DATA & APPLICATION LOGIC
+       ========================================================================== -->
+  <script>
+    /**
+     * ============================================================================
+     * CARD DATA REPOSITORY
+     * Paste additional math procedure cards directly into this array.
+     * ============================================================================
+     */
+    const PROCEDURE_CARDS = [
+      {
+        id: "fractions-unlike-denominators",
+        category: "Fractions",
+        title: "Adding Fractions with Unlike Denominators",
+        subtitle: "Find a common bottom number before adding the tops",
+        icon: "➕",
+        sportsNote: "⚾ Baseball stat: Adding on-base percentage (OBP) and slugging percentage (SLG) gives OPS! When combining fractional game stats (like 1/3 and 1/2 innings), common denominators make it work.",
+        steps: [
+          {
+            number: 1,
+            title: "Find the Common Denominator",
+            instruction: "Look at the two bottom numbers. Find their Least Common Multiple (LCM) — the smallest number both go into evenly.",
+            cue: "Tip: Count by the larger denominator until the smaller denominator divides into it."
+          },
+          {
+            number: 2,
+            title: "Convert Each Fraction",
+            instruction: "Multiply top and bottom by the same amount so both fractions have the new common denominator.",
+            cue: "Golden Rule: Whatever you multiply the bottom by, you MUST multiply the top by!"
+          },
+          {
+            number: 3,
+            title: "Add the Numerators (Tops Only)",
+            instruction: "Add the top numbers together. Keep the common denominator on the bottom unchanged.",
+            cue: "Watch out: Never add the bottom denominators together!"
+          },
+          {
+            number: 4,
+            title: "Simplify Your Answer",
+            instruction: "Check if the top and bottom can both be divided by a common factor. If top is bigger than bottom, convert to a mixed number if asked.",
+            cue: "Self-Check: Can both top and bottom be divided by 2, 3, or 5?"
+          }
+        ],
+        workedExample: {
+          problem: "Calculate: 1/4 + 2/3",
+          steps: [
+            "Step 1: Denominators are 4 and 3. Common denominator = 12.",
+            "Step 2: Convert 1/4 → (1×3)/(4×3) = 3/12. Convert 2/3 → (2×4)/(3×4) = 8/12.",
+            "Step 3: Add tops: 3/12 + 8/12 = 11/12.",
+            "Step 4: Check if 11/12 simplifies. 11 is prime, so 11/12 is the final answer!"
+          ]
+        },
+        finalCheck: "Did you keep the denominator unchanged and verify the fraction is fully reduced?"
+      },
+      {
+        id: "order-of-operations",
+        category: "Foundations",
+        title: "Order of Operations (PEMDAS)",
+        subtitle: "Solve in the correct priority order to get the right answer",
+        icon: "🔢",
+        sportsNote: "🏀 Basketball stat: Calculating True Shooting Percentage (TS%) uses a multi-step formula with points, field goals, and free throws. Order of operations guarantees every analyst gets the same stat!",
+        steps: [
+          {
+            number: 1,
+            title: "Parentheses and Groupings",
+            instruction: "Solve anything inside parentheses ( ), brackets [ ], or numerator/denominator grouping bars first.",
+            cue: "Focus ONLY on the math inside the groupings from innermost to outermost."
+          },
+          {
+            number: 2,
+            title: "Exponents and Powers",
+            instruction: "Calculate all exponents (powers) and square roots next.",
+            cue: "Example: 4² means 4 × 4 = 16 (not 4 × 2)."
+          },
+          {
+            number: 3,
+            title: "Multiply & Divide (Left to Right)",
+            instruction: "Perform all multiplication and division in order from left to right as you read across the equation.",
+            cue: "Crucial: Multiplication does NOT always come before division — whichever comes first from the left wins!"
+          },
+          {
+            number: 4,
+            title: "Add & Subtract (Left to Right)",
+            instruction: "Perform all addition and subtraction in order from left to right.",
+            cue: "Final sweep: Work straight across left to right to finish."
+          }
+        ],
+        workedExample: {
+          problem: "Calculate: 8 + 2 × (6 - 3)² ÷ 6",
+          steps: [
+            "Step 1 (Parentheses): (6 - 3) = 3  →  Expression becomes: 8 + 2 × 3² ÷ 6",
+            "Step 2 (Exponents): 3² = 9  →  Expression becomes: 8 + 2 × 9 ÷ 6",
+            "Step 3 (Multiply/Divide Left to Right): 2 × 9 = 18, then 18 ÷ 6 = 3  →  8 + 3",
+            "Step 4 (Add): 8 + 3 = 11. Final answer = 11."
+          ]
+        },
+        finalCheck: "Did you move strictly left-to-right when doing multiplication/division and addition/subtraction?"
+      },
+      {
+        id: "two-step-equations",
+        category: "Linear Equations",
+        title: "Solving Two-Step Equations",
+        subtitle: "Isolate the variable using inverse operations in reverse order",
+        icon: "⚖️",
+        sportsNote: "🏈 Football stat: A team scored 3 touchdowns (worth 6 points each + extra points = 7x) plus 2 field goals (3 points each = 6) to total 27 points. The equation is 7x + 6 = 27. Solving gives x = 3 TDs!",
+        steps: [
+          {
+            number: 1,
+            title: "Identify the Variable and Operations",
+            instruction: "Locate the variable letter (like x). Note what numbers are attached to it and what operations are being done.",
+            cue: "Example: In 3x + 5 = 26, the variable x is multiplied by 3 and has 5 added."
+          },
+          {
+            number: 2,
+            title: "Undo Addition or Subtraction First",
+            instruction: "Use the opposite operation to cancel the loose number. Apply this exact operation to BOTH sides of the equals sign.",
+            cue: "If it's +5, subtract 5 from both sides. If it's -5, add 5 to both sides."
+          },
+          {
+            number: 3,
+            title: "Undo Multiplication or Division Second",
+            instruction: "Use the opposite operation to cancel the number attached to the variable. Apply it to BOTH sides.",
+            cue: "If it's 3x, divide both sides by 3. If it's x/3, multiply both sides by 3."
+          },
+          {
+            number: 4,
+            title: "Check Your Solution",
+            instruction: "Substitute your answer back into the original equation to confirm both sides equal the exact same number.",
+            cue: "If both sides balance, your answer is 100% correct!"
+          }
+        ],
+        workedExample: {
+          problem: "Solve: 4x - 7 = 21",
+          steps: [
+            "Step 1: Variable is x. It is multiplied by 4, then 7 is subtracted.",
+            "Step 2: Undo subtraction by adding 7 to both sides: 4x - 7 + 7 = 21 + 7  →  4x = 28",
+            "Step 3: Undo multiplication by dividing both sides by 4: 4x ÷ 4 = 28 ÷ 4  →  x = 7",
+            "Step 4: Check: 4(7) - 7 = 28 - 7 = 21 (It matches!). Final answer: x = 7."
+          ]
+        },
+        finalCheck: "Did you plug your solution back into the original equation to verify?"
+      },
+      {
+        id: "distributive-multi-step",
+        category: "Linear Equations",
+        title: "Multi-Step Equations (Distributing & Like Terms)",
+        subtitle: "Simplify each side before moving terms across the equals sign",
+        icon: "📦",
+        sportsNote: "⚾ Baseball stat: In fantasy baseball, calculating total category points across 3 different players where stats have multipliers requires distributing and combining player totals!",
+        steps: [
+          {
+            number: 1,
+            title: "Distribute Across Parentheses",
+            instruction: "If there are parentheses with a number outside, multiply that outside number by every term inside.",
+            cue: "Watch signs carefully: multiplying a negative by a negative gives a positive!"
+          },
+          {
+            number: 2,
+            title: "Combine Like Terms on Each Side",
+            instruction: "Add up terms with the same variable on the left side, and add up normal numbers. Do the same for the right side.",
+            cue: "Stay on your side: Combine terms on the SAME side of the '=' sign first."
+          },
+          {
+            number: 3,
+            title: "Get Variables to One Side",
+            instruction: "If the variable is on both sides, add or subtract one of the variable terms so x is only on one side.",
+            cue: "Tip: Move the smaller variable term to keep coefficients positive."
+          },
+          {
+            number: 4,
+            title: "Solve the Two-Step Equation",
+            instruction: "Undo addition/subtraction first, then undo multiplication/division to isolate x.",
+            cue: "Standard sequence: cancel constants, then divide by coefficient."
+          },
+          {
+            number: 5,
+            title: "Check Your Solution",
+            instruction: "Plug your answer back into the very original equation to make sure both sides balance.",
+            cue: "Self-Check: Left side result must equal Right side result."
+          }
+        ],
+        workedExample: {
+          problem: "Solve: 2(3x - 4) + 4x = 32",
+          steps: [
+            "Step 1 (Distribute 2): 2×3x - 2×4 + 4x = 32  →  6x - 8 + 4x = 32",
+            "Step 2 (Combine Like Terms): (6x + 4x) - 8 = 32  →  10x - 8 = 32",
+            "Step 3 (Undo -8): Add 8 to both sides  →  10x = 40",
+            "Step 4 (Undo ×10): Divide both sides by 10  →  x = 4",
+            "Step 5 (Check): 2(3(4) - 4) + 4(4) = 2(8) + 16 = 16 + 16 = 32 (Matches!)"
+          ]
+        },
+        finalCheck: "Did you distribute to EVERY term inside the parentheses and check your signs?"
+      },
+      {
+        id: "clearing-fractions-equations",
+        category: "Linear Equations",
+        title: "Clearing Fractions from Equations",
+        subtitle: "Multiply every term by the common denominator to eliminate all fractions in 1 step",
+        icon: "🧹",
+        sportsNote: "🏀 Basketball stat: Player Efficiency Rating (PER) formulas combine fractions like 1/2 of assists and 3/4 of steals. Clearing fractions turns complex formulas into clean whole numbers!",
+        steps: [
+          {
+            number: 1,
+            title: "Find the Common Denominator (LCD)",
+            instruction: "Look at all bottom numbers in the entire equation. Find the smallest number that all denominators divide into.",
+            cue: "Example: If denominators are 2 and 4, the LCD is 4."
+          },
+          {
+            number: 2,
+            title: "Multiply EVERY Term by the LCD",
+            instruction: "Multiply every single term on the left and right side by that common denominator. This cancels out all fraction bottoms!",
+            cue: "Crucial: You must multiply whole numbers by the LCD too, not just the fractions!"
+          },
+          {
+            number: 3,
+            title: "Simplify to Whole Numbers",
+            instruction: "Divide out the denominators to produce a clean equation made of regular integers.",
+            cue: "Notice: There should be zero fraction bars remaining."
+          },
+          {
+            number: 4,
+            title: "Solve the Whole Number Equation",
+            instruction: "Use standard inverse operations (undo add/subtract, then undo multiply/divide) to solve for the variable.",
+            cue: "Now it's a regular two-step or multi-step equation!"
+          },
+          {
+            number: 5,
+            title: "Check Your Solution",
+            instruction: "Plug the answer back into the original fraction equation to verify.",
+            cue: "Check: Does the left side equal the right side?"
+          }
+        ],
+        workedExample: {
+          problem: "Solve: (1/2)x + 3 = (3/4)x - 1",
+          steps: [
+            "Step 1: Denominators are 2 and 4. Common denominator (LCD) = 4.",
+            "Step 2: Multiply every term by 4: 4×(1/2)x + 4×(3) = 4×(3/4)x - 4×(1)",
+            "Step 3: Simplify: 2x + 12 = 3x - 4",
+            "Step 4: Subtract 2x from both sides → 12 = x - 4. Add 4 → x = 16",
+            "Step 5: Check: (1/2)(16) + 3 = 8 + 3 = 11. (3/4)(16) - 1 = 12 - 1 = 11 (Matches!)"
+          ]
+        },
+        finalCheck: "Did you remember to multiply the standalone numbers by the LCD as well?"
+      },
+      {
+        id: "quadratic-standard-form",
+        category: "Quadratics & Powers",
+        title: "Setting Quadratics to Standard Form (ax² + bx + c = 0)",
+        subtitle: "The essential first step for multi-term quadratic equations like ½x² - 3x + 25 = 125",
+        icon: "📐",
+        sportsNote: "🏈 Football stat: The trajectory of a punter's kick follows a parabolic quadratic curve h = -16t² + v₀t + h₀. Setting it equal to 0 tells coaches exactly when the ball hits the turf!",
+        steps: [
+          {
+            number: 1,
+            title: "Move All Terms to One Side (Make it = 0)",
+            instruction: "Subtract or add the number on the right side so that one side of the equation equals ZERO.",
+            cue: "Example: In ½x² - 3x + 25 = 125, subtract 125 from both sides to get ½x² - 3x - 100 = 0."
+          },
+          {
+            number: 2,
+            title: "Clear Any Fraction Coefficients",
+            instruction: "If there is a fraction (like ½x²), multiply every term on both sides by the denominator to get clean whole numbers.",
+            cue: "Example: Multiply ½x² - 3x - 100 = 0 by 2 on all terms → x² - 6x - 200 = 0."
+          },
+          {
+            number: 3,
+            title: "Arrange in Descending Exponent Order",
+            instruction: "Arrange the terms in standard order: first x², then x, then the constant number = 0 (ax² + bx + c = 0).",
+            cue: "Check: High power first (x²), medium power second (x), loose number last."
+          },
+          {
+            number: 4,
+            title: "Identify Coefficients a, b, and c",
+            instruction: "Read off the values of a (number in front of x²), b (number in front of x), and c (constant number). Keep their + / - signs!",
+            cue: "Example: In x² - 6x - 200 = 0 → a = 1, b = -6, c = -200."
+          }
+        ],
+        workedExample: {
+          problem: "Transform into Standard Form: ½x² + (-3x) + 25 = 125",
+          steps: [
+            "Step 1 (Make right side 0): Subtract 125 from both sides: ½x² - 3x + 25 - 125 = 0  →  ½x² - 3x - 100 = 0",
+            "Step 2 (Clear fraction): Multiply all terms by 2: 2×(½x²) - 2×(3x) - 2×(100) = 2×(0)  →  x² - 6x - 200 = 0",
+            "Step 3 (Check standard order): ax² + bx + c = 0 is satisfied (x² - 6x - 200 = 0).",
+            "Step 4 (Identify coefficients): a = 1,  b = -6,  c = -200. Ready to solve!"
+          ]
+        },
+        finalCheck: "Is one side of the equals sign exactly 0, and did you keep the negative signs with b and c?"
+      },
+      {
+        id: "quadratic-formula",
+        category: "Quadratics & Powers",
+        title: "Solving Quadratics with the Quadratic Formula",
+        subtitle: "Use x = (-b ± √(b² - 4ac)) / (2a) to solve any quadratic equation",
+        icon: "🧪",
+        sportsNote: "⚾ Baseball stat: Statcast uses quadratic formulas to compute the launch angle, hang time, and landing distance of every exit-velocity home run!",
+        steps: [
+          {
+            number: 1,
+            title: "Identify & Track a, b, and c",
+            instruction: "Make sure the equation is in standard form (ax² + bx + c = 0), then identify and record the values for a, b, and c.",
+            cue: "Example for x² - 6x - 200 = 0: a = 1, b = -6, c = -200."
+          },
+          {
+            number: 2,
+            title: "Calculate the Discriminant (b² - 4ac)",
+            instruction: "Find the value inside the square root first. Square b, multiply 4×a×c, and subtract.",
+            cue: "Tip: (-6)² = +36. Then -4(1)(-200) = +800. So 36 + 800 = 836 (or clean squares like 841/900)."
+          },
+          {
+            number: 3,
+            title: "Set Up the Formula: x = (-b ± √D) / (2a)",
+            instruction: "Substitute -b (opposite of b), the square root value, and 2a into the quadratic formula template.",
+            cue: "Note: If b is -6, then -b is +6!"
+          },
+          {
+            number: 4,
+            title: "Split Into Two Branches (+ and -)",
+            instruction: "Calculate the plus branch: ( -b + √D ) / 2a, and the minus branch: ( -b - √D ) / 2a to find both solutions.",
+            cue: "Quadratics normally have two real solutions."
+          },
+          {
+            number: 5,
+            title: "Check Both Answers",
+            instruction: "Substitute each solution back into the original equation to verify that it equals 0.",
+            cue: "Self-Check: Test both answers in the original equation."
+          }
+        ],
+        workedExample: {
+          problem: "Solve: x² - 6x - 16 = 0",
+          steps: [
+            "Step 1 (Identify & Track): a = 1,  b = -6,  c = -16",
+            "Step 2 (Discriminant): b² - 4ac = (-6)² - 4(1)(-16) = 36 + 64 = 100. (And √100 = 10)",
+            "Step 3 (Formula Setup): x = (-(-6) ± √100) / (2×1)  →  x = (6 ± 10) / 2",
+            "Step 4 (Split Branches): Plus branch: (6 + 10)/2 = 16/2 = 8. Minus branch: (6 - 10)/2 = -4/2 = -2.",
+            "Step 5 (Check): (8)² - 6(8) - 16 = 64 - 48 - 16 = 0. (-2)² - 6(-2) - 16 = 4 + 12 - 16 = 0. Solutions: x = 8 and x = -2!"
+          ]
+        },
+        finalCheck: "Did you remember that squaring a negative b gives a positive number?"
+      },
+      {
+        id: "quadratic-factoring",
+        category: "Quadratics & Powers",
+        title: "Solving Quadratics by Factoring (x² + bx + c = 0)",
+        subtitle: "Find two numbers that multiply to c and add to b",
+        icon: "🧩",
+        sportsNote: "⚽ Soccer stat: When analyzing the arc of a free kick over a defensive wall, factoring the quadratic gives the exact two ground contact points (launch and goal line)!",
+        steps: [
+          {
+            number: 1,
+            title: "Set the Equation to Zero",
+            instruction: "Ensure the equation is in the format x² + bx + c = 0.",
+            cue: "If not, move all terms to the left side first."
+          },
+          {
+            number: 2,
+            title: "Find the Magic Number Pair",
+            instruction: "Find two numbers (p and q) that MULTIPLY to give 'c' and ADD together to give 'b'.",
+            cue: "Example for x² - 6x - 40 = 0: Two numbers that multiply to -40 and add to -6 are -10 and +4!"
+          },
+          {
+            number: 3,
+            title: "Form the Two Factors: (x + p)(x + q) = 0",
+            instruction: "Place the two magic numbers into the binomial parenthesis factors.",
+            cue: "Example: (x - 10)(x + 4) = 0."
+          },
+          {
+            number: 4,
+            title: "Set Each Factor to Zero and Solve",
+            instruction: "By the Zero Product Property, either (x + p) = 0 or (x + q) = 0. Solve each simple one-step equation.",
+            cue: "If x - 10 = 0 → x = 10. If x + 4 = 0 → x = -4."
+          },
+          {
+            number: 5,
+            title: "Check Both Solutions",
+            instruction: "Plug both values back into the original equation to verify they give 0.",
+            cue: "Self-Check: Verify both numbers satisfy the equation."
+          }
+        ],
+        workedExample: {
+          problem: "Solve by Factoring: x² - 6x - 40 = 0",
+          steps: [
+            "Step 1: Equation is already in standard form with b = -6 and c = -40.",
+            "Step 2: Find two numbers that multiply to -40 and add to -6: (-10) × 4 = -40, and -10 + 4 = -6. (Numbers are -10 and +4).",
+            "Step 3 (Form factors): (x - 10)(x + 4) = 0",
+            "Step 4: Solve each branch: x - 10 = 0  →  x = 10. And x + 4 = 0  →  x = -4.",
+            "Step 5: Check: (10)² - 6(10) - 40 = 100 - 60 - 40 = 0. (-4)² - 6(-4) - 40 = 16 + 24 - 40 = 0. Final answers: x = 10 and x = -4!"
+          ]
+        },
+        finalCheck: "Did you set EACH parenthesis factor to 0 separately?"
+      },
+      {
+        id: "isolate-square-roots",
+        category: "Quadratics & Powers",
+        title: "Solving Equations with Square Roots (x² = k)",
+        subtitle: "When there is no middle 'x' term, isolate x² and take the square root of both sides",
+        icon: "⚡",
+        sportsNote: "🏎️ Racing stat: Braking distance formula d = v² / (2a) relates speed squared to stopping distance. Isolating v² and taking the square root reveals the car's exact entry speed!",
+        steps: [
+          {
+            number: 1,
+            title: "Isolate the Squared Term (x²)",
+            instruction: "Use inverse operations to cancel addition, subtraction, multiplication, or division until only x² is on one side.",
+            cue: "Treat x² just like a single variable box until it's completely alone."
+          },
+          {
+            number: 2,
+            title: "Take the Square Root of BOTH Sides",
+            instruction: "Apply the square root symbol √ to both sides of the equals sign to cancel the power of 2.",
+            cue: "Crucial rule: Taking the square root always produces BOTH a positive and negative answer (±)!"
+          },
+          {
+            number: 3,
+            title: "Simplify the Square Root",
+            instruction: "Calculate the exact square root if it is a perfect square, or simplify the radical.",
+            cue: "Example: √49 = 7, so x = +7 or x = -7."
+          },
+          {
+            number: 4,
+            title: "Check Both Positive and Negative Answers",
+            instruction: "Substitute both + and - solutions back into the original equation to verify.",
+            cue: "Remember: (-7)² = +49 and (+7)² = +49. Both balance!"
+          }
+        ],
+        workedExample: {
+          problem: "Solve: 2x² + 18 = 90",
+          steps: [
+            "Step 1: Subtract 18 from both sides: 2x² = 72. Divide both sides by 2: x² = 36",
+            "Step 2: Take square root of both sides: √(x²) = ±√36",
+            "Step 3: Simplify: x = ±6  (x = 6 or x = -6)",
+            "Step 4: Check: 2(6)² + 18 = 2(36) + 18 = 72 + 18 = 90. 2(-6)² + 18 = 2(36) + 18 = 90. Final answers: x = 6 and x = -6."
+          ]
+        },
+        finalCheck: "Did you remember to include BOTH the positive and negative (±) root?"
+      }
+    ];
+
+    /**
+     * ============================================================================
+     * APPLICATION STATE & STORAGE
+     * ============================================================================
+     */
+    const STORAGE_KEY_PROGRESS = "ryans_math_steps_progress_v1";
+    const STORAGE_KEY_CONTRAST = "ryans_math_steps_contrast_v1";
+    const STORAGE_KEY_TEXT_SIZE = "ryans_math_steps_textsize_v1";
+
+    let appState = {
+      activeCardId: null,
+      currentStepIndex: 0,
+      activeCategory: "ALL",
+      cardProgress: {}, // { [cardId]: currentStepIndex }
+      exampleOpen: false
+    };
+
+    // Load persisted state
+    function loadSavedState() {
+      try {
+        const savedProgress = localStorage.getItem(STORAGE_KEY_PROGRESS);
+        if (savedProgress) {
+          appState.cardProgress = JSON.parse(savedProgress);
+        }
+        const savedContrast = localStorage.getItem(STORAGE_KEY_CONTRAST);
+        if (savedContrast === "true") {
+          document.body.classList.add("high-contrast");
+          document.getElementById("contrastToggleBtn").setAttribute("aria-pressed", "true");
+        }
+        const savedTextSize = localStorage.getItem(STORAGE_KEY_TEXT_SIZE);
+        if (savedTextSize === "true") {
+          document.body.classList.add("text-xl");
+          document.getElementById("textSizeToggleBtn").setAttribute("aria-pressed", "true");
+        }
+      } catch (e) {
+        console.warn("LocalStorage access error:", e);
+      }
+    }
+
+    function saveProgress() {
+      try {
+        localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(appState.cardProgress));
+      } catch (e) {
+        console.warn("Unable to save progress to LocalStorage:", e);
+      }
+    }
+
+    /**
+     * ============================================================================
+     * AUDIO FEEDBACK (Gentle synth click/chime for feedback)
+     * ============================================================================
+     */
+    let audioCtx = null;
+    function playGentleCue(type = "next") {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === "suspended") {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        const now = audioCtx.currentTime;
+        if (type === "next") {
+          osc.frequency.setValueAtTime(440, now);
+          osc.frequency.exponentialRampToValueAtTime(660, now + 0.12);
+          gain.gain.setValueAtTime(0.12, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
+          osc.start(now);
+          osc.stop(now + 0.12);
+        } else if (type === "complete") {
+          osc.frequency.setValueAtTime(523.25, now);
+          osc.frequency.exponentialRampToValueAtTime(783.99, now + 0.25);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } else if (type === "prev") {
+          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.exponentialRampToValueAtTime(320, now + 0.1);
+          gain.gain.setValueAtTime(0.1, now);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
+          osc.start(now);
+          osc.stop(now + 0.1);
+        }
+      } catch (e) {
+        // Audio not available or blocked, non-critical
+      }
+    }
+
+    /**
+     * ============================================================================
+     * TOAST / UNDO NOTIFICATION
+     * ============================================================================
+     */
+    let toastTimeout = null;
+    function showUndoToast(message, undoCallback) {
+      const toast = document.getElementById("undoToast");
+      const msgElem = document.getElementById("undoToastMsg");
+      const btnUndo = document.getElementById("btnUndoToast");
+
+      msgElem.textContent = message;
+      toast.classList.add("show");
+
+      btnUndo.onclick = () => {
+        toast.classList.remove("show");
+        if (undoCallback) undoCallback();
+      };
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 5000);
+    }
+
+    /**
+     * ============================================================================
+     * RENDER LIBRARY VIEW
+     * ============================================================================
+     */
+    function renderLibrary() {
+      const libraryView = document.getElementById("libraryView");
+      const guidedView = document.getElementById("guidedView");
+      libraryView.classList.add("active");
+      guidedView.classList.remove("active");
+
+      // Extract unique categories
+      const categories = ["ALL", ...new Set(PROCEDURE_CARDS.map(c => c.category))];
+      const filterBar = document.getElementById("categoryFilterBar");
+      filterBar.innerHTML = "";
+
+      categories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = `filter-btn ${appState.activeCategory === cat ? 'active' : ''}`;
+        btn.setAttribute("aria-pressed", appState.activeCategory === cat ? "true" : "false");
+        btn.textContent = cat === "ALL" ? "🌟 All Procedures" : cat;
+        btn.addEventListener("click", () => {
+          appState.activeCategory = cat;
+          renderLibrary();
+        });
+        filterBar.appendChild(btn);
+      });
+
+      // Filter cards
+      const filteredCards = appState.activeCategory === "ALL" 
+        ? PROCEDURE_CARDS 
+        : PROCEDURE_CARDS.filter(c => c.category === appState.activeCategory);
+
+      const cardsGrid = document.getElementById("cardsGrid");
+      cardsGrid.innerHTML = "";
+
+      filteredCards.forEach(card => {
+        const totalSteps = card.steps.length;
+        const savedStep = appState.cardProgress[card.id] || 0;
+        const isCompleted = savedStep >= totalSteps;
+        const hasStarted = savedStep > 0 && !isCompleted;
+
+        const cardElem = document.createElement("article");
+        cardElem.className = "procedure-card-item";
+        cardElem.setAttribute("tabindex", "0");
+        cardElem.setAttribute("role", "listitem");
+        cardElem.setAttribute("aria-label", `${card.title}, ${card.category}, ${totalSteps} steps.`);
+
+        let statusText = `${totalSteps} Micro-Steps`;
+        let statusClass = "card-progress-pill";
+        if (isCompleted) {
+          statusText = "✓ Completed";
+          statusClass += " completed";
+        } else if (hasStarted) {
+          statusText = `In Progress: Step ${savedStep + 1} of ${totalSteps}`;
+        }
+
+        cardElem.innerHTML = `
+          <div class="card-item-top">
+            <span class="card-category-tag">${card.category}</span>
+            <h2 class="card-item-title">${card.icon || '📌'} ${card.title}</h2>
+            <p class="card-item-desc">${card.subtitle}</p>
+          </div>
+          <div class="card-item-footer">
+            <span class="${statusClass}">${statusText}</span>
+            <button class="btn-open-card" aria-label="Open ${card.title}">
+              <span>Start</span> ➔
+            </button>
+          </div>
+        `;
+
+        const openCardHandler = () => openGuidedCard(card.id);
+        cardElem.addEventListener("click", openCardHandler);
+        cardElem.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            openCardHandler();
+          }
+        });
+
+        cardsGrid.appendChild(cardElem);
+      });
+    }
+
+    /**
+     * ============================================================================
+     * GUIDED MODE: OPEN & RENDER STEP
+     * ============================================================================
+     */
+    function openGuidedCard(cardId, targetStepIndex = null) {
+      const card = PROCEDURE_CARDS.find(c => c.id === cardId);
+      if (!card) return;
+
+      appState.activeCardId = cardId;
+      
+      if (targetStepIndex !== null) {
+        appState.currentStepIndex = targetStepIndex;
+      } else {
+        // Resume from saved step, or 0
+        const saved = appState.cardProgress[cardId] || 0;
+        appState.currentStepIndex = (saved < card.steps.length) ? saved : 0;
+      }
+
+      appState.exampleOpen = false;
+
+      // Switch View
+      document.getElementById("libraryView").classList.remove("active");
+      document.getElementById("guidedView").classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      // Render static card info
+      document.getElementById("currentProcedureTitle").textContent = `${card.icon || '📌'} ${card.title}`;
+      document.getElementById("currentProcedureSubtitle").textContent = card.subtitle;
+      document.getElementById("guidedCategoryTag").textContent = card.category;
+
+      // Sports Note
+      const sportsBox = document.getElementById("sportsNoteBox");
+      if (card.sportsNote) {
+        document.getElementById("sportsNoteText").textContent = card.sportsNote;
+        sportsBox.style.display = "flex";
+      } else {
+        sportsBox.style.display = "none";
+      }
+
+      // Worked Example
+      renderWorkedExample(card.workedExample);
+
+      // Render the current step
+      renderCurrentStep();
+    }
+
+    function renderWorkedExample(workedExample) {
+      const body = document.getElementById("workedExampleBody");
+      const toggleBtn = document.getElementById("toggleExampleBtn");
+      const problemText = document.getElementById("exampleProblemText");
+      const stepsList = document.getElementById("exampleStepsList");
+      const arrowIcon = document.getElementById("exampleArrowIcon");
+
+      if (!workedExample) {
+        document.getElementById("workedExampleContainer").style.display = "none";
+        return;
+      }
+
+      document.getElementById("workedExampleContainer").style.display = "block";
+      problemText.textContent = workedExample.problem;
+      stepsList.innerHTML = "";
+
+      workedExample.steps.forEach(stepStr => {
+        const li = document.createElement("li");
+        li.className = "example-step-item";
+        li.textContent = stepStr;
+        stepsList.appendChild(li);
+      });
+
+      // Update toggle state
+      if (appState.exampleOpen) {
+        body.classList.add("open");
+        toggleBtn.setAttribute("aria-expanded", "true");
+        toggleBtn.querySelector("span:first-child").textContent = "📖 Hide Worked Example";
+        arrowIcon.textContent = "▲";
+      } else {
+        body.classList.remove("open");
+        toggleBtn.setAttribute("aria-expanded", "false");
+        toggleBtn.querySelector("span:first-child").textContent = "📖 Show Worked Example";
+        arrowIcon.textContent = "▼";
+      }
+    }
+
+    function renderCurrentStep() {
+      const card = PROCEDURE_CARDS.find(c => c.id === appState.activeCardId);
+      if (!card) return;
+
+      const totalSteps = card.steps.length;
+      const stepIdx = appState.currentStepIndex;
+      const isFinished = stepIdx >= totalSteps;
+
+      const heroCard = document.getElementById("heroStepCard");
+      const actionsStack = document.getElementById("guidedActionsStack");
+      const completionCard = document.getElementById("completionCard");
+
+      // Progress bar & Dots
+      const dotsContainer = document.getElementById("progressDotsContainer");
+      dotsContainer.innerHTML = "";
+      dotsContainer.setAttribute("aria-valuenow", isFinished ? totalSteps : stepIdx + 1);
+      dotsContainer.setAttribute("aria-valuemax", totalSteps);
+
+      for (let i = 0; i < totalSteps; i++) {
+        const seg = document.createElement("div");
+        seg.className = "progress-segment";
+        if (i < stepIdx) {
+          seg.classList.add("completed");
+        } else if (i === stepIdx && !isFinished) {
+          seg.classList.add("current");
+        }
+        dotsContainer.appendChild(seg);
+      }
+
+      if (isFinished) {
+        // Completed State
+        document.getElementById("stepProgressLabel").textContent = "All Steps Complete!";
+        document.getElementById("stepProgressPercent").textContent = "100%";
+
+        heroCard.style.display = "none";
+        actionsStack.style.display = "none";
+        completionCard.classList.add("active");
+        document.getElementById("finalCheckText").textContent = card.finalCheck || "Did you double-check your final answer?";
+
+        // Save completed in state
+        appState.cardProgress[card.id] = totalSteps;
+        saveProgress();
+        playGentleCue("complete");
+        return;
+      }
+
+      // Active Step State
+      heroCard.style.display = "block";
+      actionsStack.style.display = "flex";
+      completionCard.classList.remove("active");
+
+      const currentStep = card.steps[stepIdx];
+
+      document.getElementById("stepProgressLabel").textContent = `Step ${stepIdx + 1} of ${totalSteps}`;
+      document.getElementById("stepProgressPercent").textContent = `${Math.round(((stepIdx) / totalSteps) * 100)}%`;
+
+      document.getElementById("heroStepBadge").textContent = `STEP ${currentStep.number || (stepIdx + 1)} OF ${totalSteps}`;
+      document.getElementById("heroStepTitle").textContent = currentStep.title;
+      document.getElementById("heroStepInstruction").textContent = currentStep.instruction;
+
+      const cueBox = document.getElementById("heroStepCueBox");
+      if (currentStep.cue) {
+        document.getElementById("heroStepCue").textContent = currentStep.cue;
+        cueBox.style.display = "block";
+      } else {
+        cueBox.style.display = "none";
+      }
+
+      // Next button text
+      const nextBtn = document.getElementById("btnNextStep");
+      if (stepIdx === totalSteps - 1) {
+        nextBtn.innerHTML = `<span>Complete Final Step & Check</span> <span aria-hidden="true">✓</span>`;
+      } else {
+        nextBtn.innerHTML = `<span>Done — Next Step</span> <span aria-hidden="true">➔</span>`;
+      }
+
+      // Previous button state
+      const prevBtn = document.getElementById("btnPrevStep");
+      prevBtn.disabled = (stepIdx === 0);
+
+      // Save progress
+      appState.cardProgress[card.id] = stepIdx;
+      saveProgress();
+    }
+
+    /**
+     * ============================================================================
+     * EVENT HANDLERS & STEP NAVIGATION
+     * ============================================================================
+     */
+    function handleNextStep() {
+      const card = PROCEDURE_CARDS.find(c => c.id === appState.activeCardId);
+      if (!card) return;
+
+      const prevIndex = appState.currentStepIndex;
+      appState.currentStepIndex++;
+      playGentleCue("next");
+      renderCurrentStep();
+
+      // Offer easy 1-tap undo toast
+      showUndoToast(`Moved to Step ${appState.currentStepIndex + 1}`, () => {
+        appState.currentStepIndex = prevIndex;
+        playGentleCue("prev");
+        renderCurrentStep();
+      });
+    }
+
+    function handlePrevStep() {
+      if (appState.currentStepIndex > 0) {
+        appState.currentStepIndex--;
+        playGentleCue("prev");
+        renderCurrentStep();
+      }
+    }
+
+    function handleResetProcedure() {
+      const prevIndex = appState.currentStepIndex;
+      appState.currentStepIndex = 0;
+      playGentleCue("prev");
+      renderCurrentStep();
+
+      showUndoToast("Restarted procedure from Step 1", () => {
+        appState.currentStepIndex = prevIndex;
+        renderCurrentStep();
+      });
+    }
+
+    // Toggle worked example
+    document.getElementById("toggleExampleBtn").addEventListener("click", () => {
+      appState.exampleOpen = !appState.exampleOpen;
+      const card = PROCEDURE_CARDS.find(c => c.id === appState.activeCardId);
+      if (card) renderWorkedExample(card.workedExample);
+    });
+
+    // Primary Buttons
+    document.getElementById("btnNextStep").addEventListener("click", handleNextStep);
+    document.getElementById("btnPrevStep").addEventListener("click", handlePrevStep);
+    document.getElementById("btnResetProcedure").addEventListener("click", handleResetProcedure);
+    
+    // Completion Buttons
+    document.getElementById("btnRepeatProcedure").addEventListener("click", () => {
+      appState.currentStepIndex = 0;
+      renderCurrentStep();
+    });
+
+    document.getElementById("btnDoneReturnHome").addEventListener("click", () => {
+      renderLibrary();
+    });
+
+    // Back to library
+    document.getElementById("btnBackToLibrary").addEventListener("click", () => {
+      renderLibrary();
+    });
+    document.getElementById("logoLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      renderLibrary();
+    });
+
+    // Accessibility Toggles
+    document.getElementById("contrastToggleBtn").addEventListener("click", function() {
+      const isHigh = document.body.classList.toggle("high-contrast");
+      this.setAttribute("aria-pressed", isHigh ? "true" : "false");
+      try {
+        localStorage.setItem(STORAGE_KEY_CONTRAST, isHigh ? "true" : "false");
+      } catch (e) {}
+    });
+
+    document.getElementById("textSizeToggleBtn").addEventListener("click", function() {
+      const isLarge = document.body.classList.toggle("text-xl");
+      this.setAttribute("aria-pressed", isLarge ? "true" : "false");
+      try {
+        localStorage.setItem(STORAGE_KEY_TEXT_SIZE, isLarge ? "true" : "false");
+      } catch (e) {}
+    });
+
+    // Keyboard Shortcuts (Space or Right Arrow for Next Step, Left Arrow for Previous)
+    window.addEventListener("keydown", (e) => {
+      const guidedActive = document.getElementById("guidedView").classList.contains("active");
+      if (!guidedActive) return;
+
+      // Don't trigger if user is interacting with an input or button
+      if (["BUTTON", "A", "INPUT"].includes(document.activeElement.tagName)) {
+        return;
+      }
+
+      if (e.key === "ArrowRight" || e.key === " ") {
+        e.preventDefault();
+        const card = PROCEDURE_CARDS.find(c => c.id === appState.activeCardId);
+        if (card && appState.currentStepIndex < card.steps.length) {
+          handleNextStep();
+        }
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        handlePrevStep();
+      }
+    });
+
+    // Initialize App
+    loadSavedState();
+    renderLibrary();
+  </script>
+</body>
+</html>
