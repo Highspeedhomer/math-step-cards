@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Math Steps">
+  <meta name="apple-mobile-web-app-title" content="Math Studio">
   <meta name="theme-color" content="#1a56db">
-  <title>Ryan's Math Step Cards</title>
+  <meta name="description" content="Ryan's Math Studio: Step cards, tap-to-solve algebra workbench, and working memory shelf.">
+  <title>Ryan's Math Studio</title>
   <style>
     /* ==========================================================================
        ACCESSIBILITY & CSS DESIGN SYSTEM
@@ -23,6 +24,8 @@
       --bg-accent-soft: #e8f0fe;
       --bg-sports-soft: #fff4e5;
       --bg-example-soft: #eef7ee;
+      --bg-pill-soft: #f0f7ff;
+      --bg-shelf-slot: #f8fafc;
       
       --text-main: #141c2b;
       --text-muted: #3d4f68;
@@ -42,6 +45,14 @@
 
       --example-border: #10b981;
       --example-text: #065f46;
+
+      --pill-border: #3b82f6;
+      --pill-hover-bg: #dbeafe;
+
+      --op-add: #0d7844;
+      --op-sub: #b45309;
+      --op-mul: #1a56db;
+      --op-div: #7e22ce;
 
       --border-subtle: #cbd5e1;
       --border-strong: #94a3b8;
@@ -68,6 +79,8 @@
       --bg-accent-soft: #0c2340;
       --bg-sports-soft: #2e1d05;
       --bg-example-soft: #052614;
+      --bg-pill-soft: #14243b;
+      --bg-shelf-slot: #1c1c1c;
 
       --text-main: #ffffff;
       --text-muted: #e2e8f0;
@@ -87,6 +100,14 @@
 
       --example-border: #34d399;
       --example-text: #a7f3d0;
+
+      --pill-border: #60a5fa;
+      --pill-hover-bg: #1e3a8a;
+
+      --op-add: #34d399;
+      --op-sub: #fbbf24;
+      --op-mul: #60a5fa;
+      --op-div: #c084fc;
 
       --border-subtle: #64748b;
       --border-strong: #cbd5e1;
@@ -123,7 +144,6 @@
       padding-bottom: 60px;
     }
 
-    /* Focus styling for keyboard and switch accessibility */
     :focus-visible {
       outline: 4px solid var(--border-focus) !important;
       outline-offset: 4px !important;
@@ -145,7 +165,7 @@
     }
 
     .header-container {
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
       display: flex;
       flex-wrap: wrap;
@@ -162,6 +182,7 @@
       align-items: center;
       gap: 10px;
       text-decoration: none;
+      cursor: pointer;
     }
 
     .brand-tagline {
@@ -203,7 +224,49 @@
       transform: scale(0.97);
     }
 
-    /* Helper Boundary Info Line */
+    /* Global Tool Switcher Navigation */
+    .tool-nav-bar {
+      background: var(--bg-surface);
+      border-bottom: 2px solid var(--border-subtle);
+      padding: 10px 20px;
+    }
+
+    .tool-nav-container {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-tool-tab {
+      min-height: var(--touch-min);
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: 3px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-weight: 800;
+      font-size: 0.98em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-tool-tab:hover {
+      background: var(--bg-accent-soft);
+      border-color: var(--primary);
+    }
+
+    .btn-tool-tab.active {
+      background: var(--primary);
+      color: var(--text-inverse);
+      border-color: var(--primary);
+    }
+
+    /* Helper Banner */
     .helper-banner {
       background: var(--bg-accent-soft);
       border-bottom: 2px solid var(--border-subtle);
@@ -211,7 +274,7 @@
     }
 
     .helper-banner-inner {
-      max-width: 900px;
+      max-width: 960px;
       margin: 0 auto;
       display: flex;
       align-items: flex-start;
@@ -233,19 +296,18 @@
 
     /* Main Container */
     .main-content {
-      max-width: 900px;
+      max-width: 960px;
       width: 100%;
       margin: 0 auto;
       padding: 24px 20px;
       flex: 1;
     }
 
-    /* View Switcher Container */
-    .view-section {
+    .module-view {
       display: none;
     }
 
-    .view-section.active {
+    .module-view.active {
       display: block;
       animation: fadeIn 0.2s ease-out;
     }
@@ -256,7 +318,99 @@
     }
 
     /* ==========================================================================
-       LIBRARY VIEW (Max 2 taps to start any procedure)
+       HUB VIEW
+       ========================================================================== */
+    .hub-hero {
+      text-align: center;
+      margin-bottom: 32px;
+      padding: 24px 16px;
+    }
+
+    .hub-hero-title {
+      font-size: var(--font-size-title);
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .hub-hero-desc {
+      font-size: var(--font-size-lg);
+      color: var(--text-muted);
+      max-width: 680px;
+      margin: 0 auto;
+    }
+
+    .hub-tools-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 24px;
+    }
+
+    @media (min-width: 768px) {
+      .hub-tools-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    .hub-tool-card {
+      background: var(--bg-surface);
+      border: 4px solid var(--border-subtle);
+      border-radius: var(--border-radius-card);
+      padding: 30px 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: left;
+      cursor: pointer;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+      min-height: 280px;
+    }
+
+    .hub-tool-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+    }
+
+    .hub-tool-icon {
+      font-size: 3em;
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+
+    .hub-tool-name {
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 10px;
+    }
+
+    .hub-tool-desc {
+      font-size: 0.95em;
+      color: var(--text-muted);
+      line-height: 1.45;
+      margin-bottom: 20px;
+    }
+
+    .btn-launch-tool {
+      min-height: var(--touch-min);
+      padding: 12px 20px;
+      background: var(--primary);
+      color: var(--text-inverse);
+      border: none;
+      border-radius: var(--border-radius-btn);
+      font-weight: 800;
+      font-size: 1.05em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    /* ==========================================================================
+       MODULE 1: PROCEDURE STEP CARDS
        ========================================================================== */
     .library-header {
       margin-bottom: 24px;
@@ -274,7 +428,6 @@
       color: var(--text-muted);
     }
 
-    /* Category Filter Pills */
     .category-filter-bar {
       display: flex;
       flex-wrap: wrap;
@@ -305,7 +458,6 @@
       border-color: var(--primary);
     }
 
-    /* Card Library Grid */
     .cards-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -319,7 +471,6 @@
       }
     }
 
-    /* Step Card Item in Library */
     .procedure-card-item {
       background: var(--bg-surface);
       border: 3px solid var(--border-subtle);
@@ -333,18 +484,13 @@
       cursor: pointer;
       width: 100%;
       min-height: 200px;
-      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
-      position: relative;
+      transition: transform 0.15s ease, border-color 0.15s ease;
     }
 
     .procedure-card-item:hover {
       border-color: var(--primary);
       transform: translateY(-3px);
       box-shadow: 0 8px 24px rgba(0,0,0,0.12);
-    }
-
-    .procedure-card-item:active {
-      transform: scale(0.98);
     }
 
     .card-item-top {
@@ -388,12 +534,6 @@
       gap: 12px;
     }
 
-    .card-step-count {
-      font-size: 0.9em;
-      font-weight: 700;
-      color: var(--text-muted);
-    }
-
     .card-progress-pill {
       font-size: 0.85em;
       font-weight: 700;
@@ -419,14 +559,9 @@
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      justify-content: center;
       gap: 8px;
-      flex-shrink: 0;
     }
 
-    /* ==========================================================================
-       GUIDED MODE VIEW (One step at a time)
-       ========================================================================== */
     .guided-top-bar {
       display: flex;
       flex-wrap: wrap;
@@ -449,12 +584,6 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      transition: background 0.15s ease;
-    }
-
-    .btn-back-library:hover {
-      background: var(--bg-accent-soft);
-      border-color: var(--primary);
     }
 
     .guided-card-header {
@@ -478,7 +607,6 @@
       color: var(--text-muted);
     }
 
-    /* Sports Connection Callout */
     .sports-note-box {
       background: var(--bg-sports-soft);
       border: 3px solid var(--sports-border);
@@ -509,10 +637,8 @@
       margin-bottom: 4px;
       text-transform: uppercase;
       font-size: 0.85em;
-      letter-spacing: 0.5px;
     }
 
-    /* Progress Indicators */
     .progress-section {
       margin-bottom: 24px;
     }
@@ -550,7 +676,6 @@
       box-shadow: 0 0 0 3px var(--bg-accent-soft);
     }
 
-    /* THE HERO STEP CARD (Focused Attention) */
     .hero-step-card {
       background: var(--bg-surface);
       border: 4px solid var(--primary);
@@ -558,7 +683,6 @@
       padding: 32px 28px;
       box-shadow: 0 8px 30px rgba(26, 86, 219, 0.15);
       margin-bottom: 24px;
-      position: relative;
     }
 
     .step-badge {
@@ -597,14 +721,8 @@
       padding: 14px 18px;
       font-size: 0.95em;
       color: var(--text-muted);
-      line-height: 1.45;
     }
 
-    .step-cue-box strong {
-      color: var(--text-main);
-    }
-
-    /* Huge Action Buttons Stack */
     .action-buttons-stack {
       display: flex;
       flex-direction: column;
@@ -627,16 +745,11 @@
       justify-content: center;
       gap: 14px;
       box-shadow: 0 6px 18px rgba(13, 120, 68, 0.3);
-      transition: background 0.15s ease, transform 0.1s ease;
       width: 100%;
     }
 
     .btn-next-step:hover {
       background: var(--success-hover);
-    }
-
-    .btn-next-step:active {
-      transform: scale(0.98);
     }
 
     .secondary-actions-row {
@@ -659,21 +772,13 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      transition: background 0.15s ease;
-    }
-
-    .btn-secondary-action:hover {
-      background: var(--bg-accent-soft);
-      border-color: var(--border-strong);
     }
 
     .btn-secondary-action:disabled {
       opacity: 0.4;
       cursor: not-allowed;
-      border-color: var(--border-subtle);
     }
 
-    /* Worked Example Accordion / Toggle */
     .worked-example-section {
       background: var(--bg-example-soft);
       border: 3px solid var(--example-border);
@@ -695,11 +800,6 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      text-align: left;
-    }
-
-    .worked-example-toggle-btn:hover {
-      background: rgba(16, 185, 129, 0.1);
     }
 
     .worked-example-body {
@@ -741,7 +841,6 @@
       border-left: 4px solid var(--example-border);
     }
 
-    /* Completed State Screen */
     .completion-card {
       background: var(--bg-surface);
       border: 4px solid var(--success);
@@ -758,19 +857,6 @@
       animation: fadeIn 0.25s ease-out;
     }
 
-    .completion-icon {
-      font-size: 4em;
-      margin-bottom: 12px;
-      line-height: 1;
-    }
-
-    .completion-title {
-      font-size: var(--font-size-title);
-      font-weight: 900;
-      color: var(--success);
-      margin-bottom: 12px;
-    }
-
     .final-check-box {
       background: var(--bg-accent-soft);
       border: 3px solid var(--primary);
@@ -784,7 +870,6 @@
       font-size: 0.85em;
       font-weight: 900;
       text-transform: uppercase;
-      letter-spacing: 0.5px;
       color: var(--primary);
       margin-bottom: 6px;
       display: block;
@@ -794,6 +879,537 @@
       font-size: var(--font-size-lg);
       font-weight: 700;
       color: var(--text-main);
+    }
+
+    /* ==========================================================================
+       MODULE 2: TAP-TO-SOLVE WORKBENCH
+       ========================================================================== */
+    .solver-container {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Category Filter for Solver */
+    .solver-category-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .solver-cat-btn {
+      min-height: 50px;
+      padding: 8px 18px;
+      border-radius: 24px;
+      border: 2px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-weight: 800;
+      font-size: 0.92em;
+      cursor: pointer;
+    }
+
+    .solver-cat-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+
+    .problem-picker-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .problem-pill-btn {
+      min-height: var(--touch-min);
+      padding: 10px 18px;
+      border-radius: 12px;
+      border: 3px solid var(--border-subtle);
+      background: var(--bg-surface);
+      color: var(--text-main);
+      font-weight: 800;
+      font-size: 0.95em;
+      cursor: pointer;
+    }
+
+    .problem-pill-btn.active {
+      background: var(--primary);
+      color: var(--text-inverse);
+      border-color: var(--primary);
+    }
+
+    .equation-focus-card {
+      background: var(--bg-surface);
+      border: 4px solid var(--primary);
+      border-radius: var(--border-radius-card);
+      padding: 28px;
+      box-shadow: var(--shadow-card);
+      text-align: center;
+    }
+
+    .equation-label {
+      font-size: 0.9em;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .current-equation-text {
+      font-size: 2.3em;
+      font-weight: 900;
+      color: var(--text-main);
+      letter-spacing: 1px;
+      word-break: break-word;
+      margin: 12px 0;
+    }
+
+    .equation-history-log {
+      background: var(--bg-shelf-slot);
+      border: 2px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-top: 18px;
+      text-align: left;
+    }
+
+    .history-title {
+      font-size: 0.85em;
+      font-weight: 900;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .history-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .history-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 14px;
+      background: var(--bg-surface);
+      border-radius: 8px;
+      font-size: 1.05em;
+      font-weight: 700;
+      border-left: 4px solid var(--primary);
+    }
+
+    .history-move-badge {
+      font-size: 0.85em;
+      padding: 4px 12px;
+      border-radius: 6px;
+      background: var(--bg-accent-soft);
+      color: var(--primary);
+      font-weight: 800;
+    }
+
+    .pills-section {
+      background: var(--bg-surface);
+      border: 3px solid var(--border-subtle);
+      border-radius: var(--border-radius-card);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .pills-title {
+      font-size: var(--font-size-lg);
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .pills-subtitle {
+      font-size: 0.95em;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .operation-pills-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 600px) {
+      .operation-pills-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    /* Operation Pills with Clear Word Badges */
+    .btn-operation-pill {
+      min-height: 76px;
+      padding: 16px 20px;
+      background: var(--bg-pill-soft);
+      border: 3px solid var(--pill-border);
+      border-radius: var(--border-radius-btn);
+      color: var(--text-main);
+      font-size: 1.08em;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: left;
+      transition: all 0.15s ease;
+      gap: 12px;
+    }
+
+    .btn-operation-pill:hover {
+      background: var(--pill-hover-bg);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(59, 130, 246, 0.2);
+    }
+
+    .pill-action-tag {
+      font-size: 0.8em;
+      font-weight: 900;
+      padding: 4px 10px;
+      border-radius: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+
+    .pill-tag-add { background: #dcfce7; color: #166534; }
+    .pill-tag-sub { background: #fef3c7; color: #92400e; }
+    .pill-tag-mul { background: #dbeafe; color: #1e40af; }
+    .pill-tag-div { background: #f3e8ff; color: #6b21a8; }
+    .pill-tag-misc { background: #e0f2fe; color: #0369a1; }
+
+    .solver-solved-card {
+      background: var(--bg-surface);
+      border: 4px solid var(--success);
+      border-radius: var(--border-radius-card);
+      padding: 32px 24px;
+      text-align: center;
+      display: none;
+    }
+
+    .solver-solved-card.active {
+      display: block;
+      animation: fadeIn 0.25s ease-out;
+    }
+
+    /* ==========================================================================
+       MODULE 3: WORKING MEMORY SHELF
+       ========================================================================== */
+    .shelf-container {
+      display: flex;
+      flex-direction: column;
+      gap: 28px;
+    }
+
+    .shelf-block {
+      background: var(--bg-surface);
+      border: 3px solid var(--border-subtle);
+      border-radius: var(--border-radius-card);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .shelf-block-header {
+      margin-bottom: 18px;
+    }
+
+    .shelf-block-title {
+      font-size: var(--font-size-xl);
+      font-weight: 900;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 4px;
+    }
+
+    .shelf-block-desc {
+      font-size: 0.95em;
+      color: var(--text-muted);
+    }
+
+    .slots-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .slots-grid-3 { grid-template-columns: repeat(3, 1fr); }
+      .slots-grid-2 { grid-template-columns: repeat(2, 1fr); }
+      .slots-grid-4 { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    .memory-slot {
+      background: var(--bg-shelf-slot);
+      border: 3px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 190px;
+    }
+
+    .slot-label {
+      font-size: 0.88em;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    /* Tappable Big Value Box */
+    .slot-value-btn {
+      width: 100%;
+      background: var(--bg-surface);
+      border: 2px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 2em;
+      font-weight: 900;
+      color: var(--primary);
+      cursor: pointer;
+      margin: 8px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .slot-value-btn:hover {
+      border-color: var(--primary);
+      background: var(--bg-accent-soft);
+    }
+
+    .slot-stepper-row {
+      display: flex;
+      gap: 6px;
+      width: 100%;
+      justify-content: center;
+    }
+
+    .btn-slot-step {
+      min-height: 46px;
+      min-width: 44px;
+      flex: 1;
+      padding: 4px;
+      background: var(--bg-surface);
+      border: 2px solid var(--border-subtle);
+      border-radius: 8px;
+      font-size: 1.05em;
+      font-weight: 900;
+      color: var(--text-main);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-slot-step:hover {
+      background: var(--bg-accent-soft);
+      border-color: var(--primary);
+    }
+
+    .computed-result-banner {
+      background: var(--bg-accent-soft);
+      border: 3px solid var(--primary);
+      border-radius: 14px;
+      padding: 16px 20px;
+      margin-top: 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .computed-result-title {
+      font-weight: 900;
+      color: var(--primary);
+      font-size: 1.05em;
+    }
+
+    .computed-result-value {
+      font-size: 1.25em;
+      font-weight: 900;
+      color: var(--text-main);
+    }
+
+    .voice-scratchbox {
+      margin-top: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .voice-notes-display {
+      min-height: 90px;
+      padding: 16px;
+      background: var(--bg-shelf-slot);
+      border: 2px solid var(--border-subtle);
+      border-radius: 12px;
+      font-size: 1.1em;
+      font-weight: 600;
+      color: var(--text-main);
+      line-height: 1.4;
+    }
+
+    .btn-mic-record {
+      min-height: 64px;
+      padding: 12px 24px;
+      background: var(--primary);
+      color: var(--text-inverse);
+      border: none;
+      border-radius: var(--border-radius-btn);
+      font-weight: 900;
+      font-size: 1.1em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn-mic-record.recording {
+      background: #dc2626;
+      animation: pulse 1s infinite alternate;
+    }
+
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.02); }
+    }
+
+    /* ==========================================================================
+       GIANT TOUCH KEYPAD MODAL (For Entering Large Numbers into Slots)
+       ========================================================================== */
+    .keypad-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .keypad-modal-backdrop.active {
+      display: flex;
+      animation: fadeIn 0.15s ease-out;
+    }
+
+    .keypad-modal-card {
+      background: var(--bg-surface);
+      border: 4px solid var(--primary);
+      border-radius: var(--border-radius-card);
+      width: 100%;
+      max-width: 480px;
+      padding: 24px;
+      box-shadow: 0 16px 40px rgba(0,0,0,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .keypad-modal-title {
+      font-size: var(--font-size-lg);
+      font-weight: 900;
+      color: var(--text-main);
+      text-align: center;
+    }
+
+    .keypad-input-row {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .keypad-display-input {
+      flex: 1;
+      min-height: 64px;
+      padding: 10px 16px;
+      font-size: 2em;
+      font-weight: 900;
+      color: var(--primary);
+      background: var(--bg-shelf-slot);
+      border: 3px solid var(--border-subtle);
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .keypad-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    .btn-keypad-digit {
+      min-height: 64px;
+      font-size: 1.6em;
+      font-weight: 900;
+      background: var(--bg-surface);
+      color: var(--text-main);
+      border: 3px solid var(--border-subtle);
+      border-radius: 14px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn-keypad-digit:hover {
+      background: var(--bg-accent-soft);
+      border-color: var(--primary);
+    }
+
+    .btn-keypad-digit:active {
+      transform: scale(0.96);
+    }
+
+    .keypad-quick-jumps {
+      display: flex;
+      gap: 8px;
+      justify-content: space-between;
+    }
+
+    .btn-quick-jump {
+      flex: 1;
+      min-height: 48px;
+      background: var(--bg-accent-soft);
+      border: 2px solid var(--border-subtle);
+      border-radius: 10px;
+      font-weight: 800;
+      font-size: 0.95em;
+      color: var(--text-main);
+      cursor: pointer;
+    }
+
+    .keypad-actions-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 8px;
     }
 
     /* Toast Notification for Undo */
@@ -830,23 +1446,25 @@
       cursor: pointer;
     }
 
-    /* Responsive Adjustments */
     @media (max-width: 600px) {
-      .secondary-actions-row {
+      .secondary-actions-row, .keypad-actions-row {
         grid-template-columns: 1fr;
       }
       .brand-title {
         font-size: 1.3em;
       }
-      .page-title {
+      .page-title, .hub-hero-title {
         font-size: 1.6em;
       }
-      .hero-step-card {
+      .hero-step-card, .equation-focus-card {
         padding: 24px 18px;
       }
-      .btn-next-step {
-        font-size: 1.1em;
+      .btn-next-step, .btn-operation-pill {
+        font-size: 1.02em;
         min-height: 68px;
+      }
+      .current-equation-text {
+        font-size: 1.7em;
       }
     }
   </style>
@@ -857,9 +1475,9 @@
   <header class="app-header" role="banner">
     <div class="header-container">
       <div>
-        <a href="#" class="brand-title" id="logoLink" aria-label="Ryan's Math Step Cards Home">
-          <span>🎯</span> Ryan’s Math Steps
-        </a>
+        <div class="brand-title" id="logoLink" tabindex="0" role="button" aria-label="Ryan's Math Studio Home">
+          <span>🎯</span> Ryan’s Math Studio
+        </div>
         <div class="brand-tagline">Ryan does the thinking • The app does the remembering</div>
       </div>
       <div class="header-controls">
@@ -872,6 +1490,24 @@
       </div>
     </div>
   </header>
+
+  <!-- WORKBENCH TOOL NAVIGATION BAR -->
+  <nav class="tool-nav-bar" aria-label="Math Tools Navigation">
+    <div class="tool-nav-container">
+      <button class="btn-tool-tab active" id="tabHub" data-target="hubView" aria-label="Home Studio">
+        <span>🏠</span> Home
+      </button>
+      <button class="btn-tool-tab" id="tabCards" data-target="stepCardsView" aria-label="Procedure Step Cards">
+        <span>🎯</span> Step Cards
+      </button>
+      <button class="btn-tool-tab" id="tabSolver" data-target="solverView" aria-label="Tap-to-Solve Workbench">
+        <span>💊</span> Tap-to-Solve
+      </button>
+      <button class="btn-tool-tab" id="tabShelf" data-target="shelfView" aria-label="Working Memory Shelf">
+        <span>🧠</span> Memory Shelf
+      </button>
+    </div>
+  </nav>
 
   <!-- HELPER BOUNDARY BANNER -->
   <aside class="helper-banner" aria-label="Helper Rule">
@@ -887,146 +1523,473 @@
   <main id="mainContainer" class="main-content" role="main">
 
     <!-- ==========================================================================
-         VIEW 1: CARD LIBRARY (Max 2 taps to start)
+         MODULE 0: HUB LANDING VIEW
          ========================================================================== -->
-    <section id="libraryView" class="view-section active" aria-labelledby="libraryHeading">
-      <div class="library-header">
-        <h1 id="libraryHeading" class="page-title">Choose a Math Procedure</h1>
-        <p class="page-subtitle">Tap any card below to start guided step-by-step practice.</p>
+    <section id="hubView" class="module-view active" aria-labelledby="hubHeading">
+      <div class="hub-hero">
+        <h1 id="hubHeading" class="hub-hero-title">Welcome to Math Studio</h1>
+        <p class="hub-hero-desc">Choose a tool below. Each tool is built with giant tap targets to hold the sequence so your working memory stays free.</p>
       </div>
 
-      <!-- Category Filter Pills -->
-      <nav class="category-filter-bar" aria-label="Filter cards by topic" id="categoryFilterBar">
-        <!-- Injected via JavaScript -->
-      </nav>
+      <div class="hub-tools-grid">
+        
+        <article class="hub-tool-card" id="tileCards" tabindex="0" role="button" aria-label="Open Procedure Step Cards">
+          <div>
+            <div class="hub-tool-icon">🎯</div>
+            <h2 class="hub-tool-name">Step Cards</h2>
+            <p class="hub-tool-desc">Guided micro-steps for multi-step math procedures, with sports stats, cues, and worked examples.</p>
+          </div>
+          <button class="btn-launch-tool" tabindex="-1">
+            <span>Open Step Cards</span> ➔
+          </button>
+        </article>
 
-      <!-- Procedures Grid -->
-      <div class="cards-grid" id="cardsGrid" role="list">
-        <!-- Injected via JavaScript -->
+        <article class="hub-tool-card" id="tileSolver" tabindex="0" role="button" aria-label="Open Tap to Solve Workbench">
+          <div>
+            <div class="hub-tool-icon">💊</div>
+            <h2 class="hub-tool-name">Tap-to-Solve</h2>
+            <p class="hub-tool-desc">Solve algebra equations by choosing operation pills. You make the strategic decisions; the app renders the algebra.</p>
+          </div>
+          <button class="btn-launch-tool" tabindex="-1">
+            <span>Open Workbench</span> ➔
+          </button>
+        </article>
+
+        <article class="hub-tool-card" id="tileShelf" tabindex="0" role="button" aria-label="Open Working Memory Shelf">
+          <div>
+            <div class="hub-tool-icon">🧠</div>
+            <h2 class="hub-tool-name">Memory Shelf</h2>
+            <p class="hub-tool-desc">A digital scratchboard for parking numbers, LCDs, a-b-c quadratic coefficients, and voice notes.</p>
+          </div>
+          <button class="btn-launch-tool" tabindex="-1">
+            <span>Open Shelf</span> ➔
+          </button>
+        </article>
+
       </div>
     </section>
 
     <!-- ==========================================================================
-         VIEW 2: GUIDED MODE (One Step At A Time)
+         MODULE 1: PROCEDURE STEP CARDS
          ========================================================================== -->
-    <section id="guidedView" class="view-section" aria-labelledby="currentProcedureTitle">
-      
-      <!-- Top Navigation within Guided Mode -->
-      <div class="guided-top-bar">
-        <button id="btnBackToLibrary" class="btn-back-library" aria-label="Return to procedure list">
-          <span aria-hidden="true">←</span> All Cards
-        </button>
-        <div id="guidedCategoryTag" class="card-category-tag">Algebra</div>
-      </div>
+    <div id="stepCardsView" class="module-view">
 
-      <!-- Procedure Title Card -->
-      <div class="guided-card-header">
-        <h1 id="currentProcedureTitle" class="guided-procedure-title">Procedure Name</h1>
-        <p id="currentProcedureSubtitle" class="guided-procedure-sub">Procedure description</p>
-      </div>
-
-      <!-- Sports Connection Note (If available) -->
-      <div id="sportsNoteBox" class="sports-note-box" style="display: none;">
-        <div class="sports-icon" aria-hidden="true">⚾</div>
-        <div class="sports-text">
-          <span class="sports-title">Sports Connection</span>
-          <span id="sportsNoteText">Sports note text goes here.</span>
+      <section id="librarySubView" class="view-section active" aria-labelledby="libraryHeading">
+        <div class="library-header">
+          <h1 id="libraryHeading" class="page-title">Choose a Math Procedure</h1>
+          <p class="page-subtitle">Tap any card below to start guided step-by-step practice.</p>
         </div>
-      </div>
 
-      <!-- Step Progress Bar -->
-      <div class="progress-section" aria-label="Procedure progress">
-        <div class="progress-text-row">
-          <span id="stepProgressLabel">Step 1 of 4</span>
-          <span id="stepProgressPercent">25%</span>
+        <nav class="category-filter-bar" aria-label="Filter cards by topic" id="categoryFilterBar"></nav>
+        <div class="cards-grid" id="cardsGrid" role="list"></div>
+      </section>
+
+      <section id="guidedSubView" class="view-section" aria-labelledby="currentProcedureTitle" style="display: none;">
+        <div class="guided-top-bar">
+          <button id="btnBackToLibrary" class="btn-back-library" aria-label="Return to procedure list">
+            <span aria-hidden="true">←</span> All Cards
+          </button>
+          <div id="guidedCategoryTag" class="card-category-tag">Algebra</div>
         </div>
-        <div class="progress-dots-container" id="progressDotsContainer" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4">
-          <!-- Step segments injected dynamically -->
+
+        <div class="guided-card-header">
+          <h1 id="currentProcedureTitle" class="guided-procedure-title">Procedure Name</h1>
+          <p id="currentProcedureSubtitle" class="guided-procedure-sub">Procedure description</p>
         </div>
-      </div>
 
-      <!-- THE ACTIVE HERO STEP (Only current step visible here) -->
-      <div id="heroStepCard" class="hero-step-card" aria-live="polite">
-        <div class="step-badge" id="heroStepBadge">STEP 1</div>
-        <h2 class="step-title" id="heroStepTitle">Step Title</h2>
-        <div class="step-instruction" id="heroStepInstruction">Step instruction text here.</div>
-        <div class="step-cue-box" id="heroStepCueBox">
-          <strong>Tip / Reminder:</strong> <span id="heroStepCue">Cue text</span>
+        <div id="sportsNoteBox" class="sports-note-box" style="display: none;">
+          <div class="sports-icon" aria-hidden="true">⚾</div>
+          <div class="sports-text">
+            <span class="sports-title">Sports Connection</span>
+            <span id="sportsNoteText">Sports note text goes here.</span>
+          </div>
         </div>
-      </div>
 
-      <!-- PRIMARY ACTION BUTTONS (Giant Touch Targets) -->
-      <div class="action-buttons-stack" id="guidedActionsStack">
-        <button id="btnNextStep" class="btn-next-step" aria-label="Done with this step, go to next step">
-          <span>Done — Next Step</span>
-          <span aria-hidden="true">➔</span>
-        </button>
+        <div class="progress-section" aria-label="Procedure progress">
+          <div class="progress-text-row">
+            <span id="stepProgressLabel">Step 1 of 4</span>
+            <span id="stepProgressPercent">25%</span>
+          </div>
+          <div class="progress-dots-container" id="progressDotsContainer" role="progressbar" aria-valuenow="1" aria-valuemin="1" aria-valuemax="4"></div>
+        </div>
 
+        <div id="heroStepCard" class="hero-step-card" aria-live="polite">
+          <div class="step-badge" id="heroStepBadge">STEP 1</div>
+          <h2 class="step-title" id="heroStepTitle">Step Title</h2>
+          <div class="step-instruction" id="heroStepInstruction">Step instruction text here.</div>
+          <div class="step-cue-box" id="heroStepCueBox">
+            <strong>Tip / Reminder:</strong> <span id="heroStepCue">Cue text</span>
+          </div>
+        </div>
+
+        <div class="action-buttons-stack" id="guidedActionsStack">
+          <button id="btnNextStep" class="btn-next-step" aria-label="Done with this step, go to next step">
+            <span>Done — Next Step</span>
+            <span aria-hidden="true">➔</span>
+          </button>
+
+          <div class="secondary-actions-row">
+            <button id="btnPrevStep" class="btn-secondary-action" aria-label="Go back to previous step">
+              <span aria-hidden="true">←</span> Previous Step
+            </button>
+            <button id="btnResetProcedure" class="btn-secondary-action" aria-label="Restart this procedure from step 1">
+              <span aria-hidden="true">↺</span> Start Over
+            </button>
+          </div>
+        </div>
+
+        <div class="worked-example-section" id="workedExampleContainer">
+          <button id="toggleExampleBtn" class="worked-example-toggle-btn" aria-expanded="false" aria-controls="workedExampleBody">
+            <span>📖 Show Worked Example</span>
+            <span id="exampleArrowIcon" aria-hidden="true">▼</span>
+          </button>
+          <div id="workedExampleBody" class="worked-example-body">
+            <div class="example-problem" id="exampleProblemText">Problem: 1/4 + 2/3</div>
+            <ul class="example-steps-list" id="exampleStepsList"></ul>
+          </div>
+        </div>
+
+        <div id="completionCard" class="completion-card" role="region" aria-label="Procedure Complete">
+          <div class="completion-icon">🎉</div>
+          <h2 class="completion-title">Procedure Complete!</h2>
+          <p style="font-size: var(--font-size-lg); color: var(--text-muted); margin-bottom: 12px;">
+            You navigated every step of this sequence.
+          </p>
+
+          <div class="final-check-box">
+            <span class="final-check-label">Final Self-Check:</span>
+            <div class="final-check-text" id="finalCheckText">Did you check your final result?</div>
+          </div>
+
+          <div class="action-buttons-stack" style="margin-top: 24px;">
+            <button id="btnRepeatProcedure" class="btn-next-step" style="background: var(--primary);" aria-label="Practice this procedure again">
+              <span>↺ Practice Again from Step 1</span>
+            </button>
+            <button id="btnDoneReturnHome" class="btn-secondary-action" style="min-height: 64px;" aria-label="Return to cards library">
+              <span>← Choose Another Card</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ==========================================================================
+         MODULE 2: TAP-TO-SOLVE WORKBENCH
+         ========================================================================== -->
+    <section id="solverView" class="module-view" aria-labelledby="solverHeading">
+      <div class="solver-container">
+        
+        <div>
+          <h1 id="solverHeading" class="page-title">Tap-to-Solve Workbench</h1>
+          <p class="page-subtitle">Select an equation below, then tap operation pills to execute your algebraic strategy.</p>
+        </div>
+
+        <!-- Topic Categories for Solver -->
+        <div class="solver-category-bar" id="solverCategoryBar">
+          <button class="solver-cat-btn active" data-cat="ALL">All Problems</button>
+          <button class="solver-cat-btn" data-cat="Linear">Linear & Two-Step</button>
+          <button class="solver-cat-btn" data-cat="Fractions">Fractions & LCD</button>
+          <button class="solver-cat-btn" data-cat="MultiStep">Distributive</button>
+          <button class="solver-cat-btn" data-cat="Quadratics">Quadratics</button>
+        </div>
+
+        <!-- Problem Selector -->
+        <div class="problem-picker-bar" id="solverProblemPicker"></div>
+
+        <!-- Main Equation Display -->
+        <div class="equation-focus-card">
+          <span class="equation-label" id="solverProblemLabel">Current Problem</span>
+          <div class="current-equation-text" id="solverCurrentEquation" aria-live="polite">3x - 7 = 14</div>
+          
+          <div class="equation-history-log" id="solverHistoryLog">
+            <span class="history-title">Steps Executed:</span>
+            <ul class="history-list" id="solverHistoryList"></ul>
+          </div>
+        </div>
+
+        <!-- Solved Celebration Card -->
+        <div class="solver-solved-card" id="solverSolvedCard">
+          <div style="font-size: 3.5em; margin-bottom: 8px;">🎉</div>
+          <h2 style="font-size: var(--font-size-title); color: var(--success); font-weight: 900; margin-bottom: 8px;">Equation Solved!</h2>
+          <p style="font-size: var(--font-size-lg); color: var(--text-muted); margin-bottom: 20px;">
+            You chose the exact sequence of moves to isolate the solution!
+          </p>
+          <button id="btnSolverNextProblem" class="btn-next-step" style="max-width: 400px; margin: 0 auto;">
+            <span>Try Next Problem</span> ➔
+          </button>
+        </div>
+
+        <!-- Operation Choice Pills Section (Always 4 Options) -->
+        <div class="pills-section" id="solverPillsSection">
+          <h2 class="pills-title">What is your next move?</h2>
+          <p class="pills-subtitle">Tap the operation you want to apply to both sides (4 choices available):</p>
+          
+          <div class="operation-pills-grid" id="solverPillsGrid" role="group" aria-label="Available algebraic operations">
+            <!-- 4 Dynamic Choice Pills Injected here -->
+          </div>
+        </div>
+
+        <!-- Solver Actions Stack -->
         <div class="secondary-actions-row">
-          <button id="btnPrevStep" class="btn-secondary-action" aria-label="Go back to previous step">
-            <span aria-hidden="true">←</span> Previous Step
+          <button id="btnSolverUndo" class="btn-secondary-action" aria-label="Undo last operation move">
+            <span>↺ Undo Last Move</span>
           </button>
-          <button id="btnResetProcedure" class="btn-secondary-action" aria-label="Restart this procedure from step 1">
-            <span aria-hidden="true">↺</span> Start Over
+          <button id="btnSolverRestart" class="btn-secondary-action" aria-label="Restart problem from beginning">
+            <span>↺ Restart Problem</span>
           </button>
         </div>
+
       </div>
+    </section>
 
-      <!-- WORKED EXAMPLE SECTION (Collapsible Drawer) -->
-      <div class="worked-example-section" id="workedExampleContainer">
-        <button id="toggleExampleBtn" class="worked-example-toggle-btn" aria-expanded="false" aria-controls="workedExampleBody">
-          <span>📖 Show Worked Example</span>
-          <span id="exampleArrowIcon" aria-hidden="true">▼</span>
-        </button>
-        <div id="workedExampleBody" class="worked-example-body">
-          <div class="example-problem" id="exampleProblemText">Problem: 1/4 + 2/3</div>
-          <ul class="example-steps-list" id="exampleStepsList">
-            <!-- Steps injected via JS -->
-          </ul>
-        </div>
-      </div>
-
-      <!-- COMPLETION SCREEN (Shown after final step is completed) -->
-      <div id="completionCard" class="completion-card" role="region" aria-label="Procedure Complete">
-        <div class="completion-icon">🎉</div>
-        <h2 class="completion-title">Procedure Complete!</h2>
-        <p style="font-size: var(--font-size-lg); color: var(--text-muted); margin-bottom: 12px;">
-          You navigated every step of this sequence.
-        </p>
-
-        <div class="final-check-box">
-          <span class="final-check-label">Final Self-Check:</span>
-          <div class="final-check-text" id="finalCheckText">Did you check your final result?</div>
+    <!-- ==========================================================================
+         MODULE 3: WORKING MEMORY SHELF
+         ========================================================================== -->
+    <section id="shelfView" class="module-view" aria-labelledby="shelfHeading">
+      <div class="shelf-container">
+        
+        <div>
+          <h1 id="shelfHeading" class="page-title">Working Memory Shelf</h1>
+          <p class="page-subtitle">Tap any slot number to type or enter large values directly, or use the + / − steppers.</p>
         </div>
 
-        <div class="action-buttons-stack" style="margin-top: 24px;">
-          <button id="btnRepeatProcedure" class="btn-next-step" style="background: var(--primary);" aria-label="Practice this procedure again">
-            <span>↺ Practice Again from Step 1</span>
+        <!-- Shelf 1: Quadratics a, b, c & Discriminant -->
+        <div class="shelf-block">
+          <div class="shelf-block-header">
+            <h2 class="shelf-block-title"><span>📐</span> Quadratics & Coefficients Shelf</h2>
+            <p class="shelf-block-desc">Track a, b, and c for equations like ½x² - 3x + 25 = 125. Tap any number to type directly!</p>
+          </div>
+
+          <div class="slots-grid slots-grid-3">
+            
+            <div class="memory-slot">
+              <span class="slot-label">Coefficient a</span>
+              <button class="slot-value-btn" onclick="openKeypadModal('slotQuadA', 'Coefficient a')">
+                <span id="slotQuadA">1</span> <span style="font-size: 0.5em; opacity: 0.6;">✏️</span>
+              </button>
+              <div class="slot-stepper-row">
+                <button class="btn-slot-step" onclick="adjustSlot('slotQuadA', -1)">−</button>
+                <button class="btn-slot-step" onclick="adjustSlot('slotQuadA', +1)">+</button>
+              </div>
+            </div>
+
+            <div class="memory-slot">
+              <span class="slot-label">Coefficient b</span>
+              <button class="slot-value-btn" onclick="openKeypadModal('slotQuadB', 'Coefficient b')">
+                <span id="slotQuadB">-6</span> <span style="font-size: 0.5em; opacity: 0.6;">✏️</span>
+              </button>
+              <div class="slot-stepper-row">
+                <button class="btn-slot-step" onclick="adjustSlot('slotQuadB', -1)">−</button>
+                <button class="btn-slot-step" onclick="adjustSlot('slotQuadB', +1)">+</button>
+              </div>
+            </div>
+
+            <div class="memory-slot">
+              <span class="slot-label">Constant c</span>
+              <button class="slot-value-btn" onclick="openKeypadModal('slotQuadC', 'Constant c')">
+                <span id="slotQuadC">-40</span> <span style="font-size: 0.5em; opacity: 0.6;">✏️</span>
+              </button>
+              <div class="slot-stepper-row">
+                <button class="btn-slot-step" onclick="adjustSlot('slotQuadC', -5)">−5</button>
+                <button class="btn-slot-step" onclick="adjustSlot('slotQuadC', +5)">+5</button>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="computed-result-banner">
+            <div>
+              <div class="computed-result-title">⚡ Discriminant (b² − 4ac):</div>
+              <div style="font-size: 0.9em; color: var(--text-muted);" id="shelfDiscDetail">(-6)² − 4(1)(-40) = 36 + 160</div>
+            </div>
+            <div class="computed-result-value" id="shelfDiscVal">D = 196 (√D = 14)</div>
+          </div>
+        </div>
+
+        <!-- Shelf 2: Fractions & Common Denominators -->
+        <div class="shelf-block">
+          <div class="shelf-block-header">
+            <h2 class="shelf-block-title"><span>➕</span> Fractions & Common Denominator Shelf</h2>
+            <p class="shelf-block-desc">Track denominators to find the Least Common Denominator (LCD).</p>
+          </div>
+
+          <div class="slots-grid slots-grid-2">
+            
+            <div class="memory-slot">
+              <span class="slot-label">Denominator 1</span>
+              <button class="slot-value-btn" onclick="openKeypadModal('slotDenom1', 'Denominator 1')">
+                <span id="slotDenom1">4</span> <span style="font-size: 0.5em; opacity: 0.6;">✏️</span>
+              </button>
+              <div class="slot-stepper-row">
+                <button class="btn-slot-step" onclick="adjustSlot('slotDenom1', -1)">−</button>
+                <button class="btn-slot-step" onclick="adjustSlot('slotDenom1', +1)">+</button>
+              </div>
+            </div>
+
+            <div class="memory-slot">
+              <span class="slot-label">Denominator 2</span>
+              <button class="slot-value-btn" onclick="openKeypadModal('slotDenom2', 'Denominator 2')">
+                <span id="slotDenom2">3</span> <span style="font-size: 0.5em; opacity: 0.6;">✏️</span>
+              </button>
+              <div class="slot-stepper-row">
+                <button class="btn-slot-step" onclick="adjustSlot('slotDenom2', -1)">−</button>
+                <button class="btn-slot-step" onclick="adjustSlot('slotDenom2', +1)">+</button>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="computed-result-banner">
+            <div>
+              <div class="computed-result-title">🧹 Common Denominator (LCD):</div>
+              <div style="font-size: 0.9em; color: var(--text-muted);" id="shelfLcmDetail">Multiples of 4 & 3</div>
+            </div>
+            <div class="computed-result-value" id="shelfLcmVal">LCD = 12</div>
+          </div>
+        </div>
+
+        <!-- Shelf 3: Free Number Parking Slots -->
+        <div class="shelf-block">
+          <div class="shelf-block-header">
+            <h2 class="shelf-block-title"><span>🔢</span> Quick Number Parking Slots</h2>
+            <p class="shelf-block-desc">Hold large or small scratch numbers. Tap any number to type directly!</p>
+          </div>
+
+          <div class="slots-grid slots-grid-4">
+            
+            <div class="memory-slot">
+              <span class="slot-label">Slot 1</span>
+              <button class="slot-value-btn" onclick="openKeypadModal('slotFree1', 'Slot 1')">
+                <span id="slotFree1">0</span> <span style="font-size: 0.5em; opacity: 0.6;">✏️</span>
+              </button>
+              <div class="slot-stepper-row">
+                <button class="btn-slot-step" onclick="adjustSlot('slotFree1', -1)">−</button>
+                <button class="btn-slot-step" onclick="adjustSlot('slotFree1', +1)">+</button>
+              </div>
+            </div>
+
+            <div class="memory-slot">
+              <span class="slot-label">Slot 2</span>
+              <button class="slot-value-btn" onclick="openKeypadModal('slotFree2', 'Slot 2')">
+                <span id="slotFree2">0</span> <span style="font-size: 0.5em; opacity: 0.6;">✏️</span>
+              </button>
+              <div class="slot-stepper-row">
+                <button class="btn-slot-step" onclick="adjustSlot('slotFree2', -1)">−</button>
+                <button class="btn-slot-step" onclick="adjustSlot('slotFree2', +1)">+</button>
+              </div>
+            </div>
+
+            <div class="memory-slot">
+              <span class="slot-label">Slot 3</span>
+              <button class="slot-value-btn" onclick="openKeypadModal('slotFree3', 'Slot 3')">
+                <span id="slotFree3">0</span> <span style="font-size: 0.5em; opacity: 0.6;">✏️</span>
+              </button>
+              <div class="slot-stepper-row">
+                <button class="btn-slot-step" onclick="adjustSlot('slotFree3', -1)">−</button>
+                <button class="btn-slot-step" onclick="adjustSlot('slotFree3', +1)">+</button>
+              </div>
+            </div>
+
+            <div class="memory-slot">
+              <span class="slot-label">Slot 4</span>
+              <button class="slot-value-btn" onclick="openKeypadModal('slotFree4', 'Slot 4')">
+                <span id="slotFree4">0</span> <span style="font-size: 0.5em; opacity: 0.6;">✏️</span>
+              </button>
+              <div class="slot-stepper-row">
+                <button class="btn-slot-step" onclick="adjustSlot('slotFree4', -1)">−</button>
+                <button class="btn-slot-step" onclick="adjustSlot('slotFree4', +1)">+</button>
+              </div>
+            </div>
+
+          </div>
+
+          <button class="btn-secondary-action" style="width: 100%; margin-top: 16px;" onclick="resetFreeSlots()">
+            <span>↺ Clear All Parking Slots</span>
           </button>
-          <button id="btnDoneReturnHome" class="btn-secondary-action" style="min-height: 64px;" aria-label="Return to cards library">
-            <span>← Choose Another Card</span>
-          </button>
         </div>
-      </div>
 
+        <!-- Shelf 4: Voice / Speech-to-Text Scratchpad -->
+        <div class="shelf-block">
+          <div class="shelf-block-header">
+            <h2 class="shelf-block-title"><span>🎙️</span> Voice Scratch Note</h2>
+            <p class="shelf-block-desc">Tap the button and speak your intermediate thought or note.</p>
+          </div>
+
+          <div class="voice-scratchbox">
+            <div class="voice-notes-display" id="voiceNoteDisplay">
+              Tap "Record Voice Note" and speak your intermediate math note...
+            </div>
+            <button id="btnVoiceRecord" class="btn-mic-record" aria-label="Record Voice Scratch Note">
+              <span>🎙️ Record Voice Note</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
     </section>
 
   </main>
 
+  <!-- ==========================================================================
+       GIANT TOUCH KEYPAD & TYPING MODAL (For Direct Number Entry)
+       ========================================================================== -->
+  <div class="keypad-modal-backdrop" id="keypadModal">
+    <div class="keypad-modal-card" role="dialog" aria-modal="true" aria-labelledby="keypadModalTitle">
+      <h2 class="keypad-modal-title" id="keypadModalTitle">Enter Value</h2>
+
+      <!-- Native Keyboard input (supports voice dictation / physical typing) -->
+      <div class="keypad-input-row">
+        <input type="number" id="keypadNativeInput" class="keypad-display-input" aria-label="Typed number value">
+      </div>
+
+      <!-- Quick Jumps -->
+      <div class="keypad-quick-jumps">
+        <button class="btn-quick-jump" onclick="keypadAddJump(-10)">−10</button>
+        <button class="btn-quick-jump" onclick="keypadAddJump(-50)">−50</button>
+        <button class="btn-quick-jump" onclick="keypadAddJump(+10)">+10</button>
+        <button class="btn-quick-jump" onclick="keypadAddJump(+50)">+50</button>
+        <button class="btn-quick-jump" onclick="keypadAddJump(+100)">+100</button>
+      </div>
+
+      <!-- Giant Touch Digits -->
+      <div class="keypad-grid">
+        <button class="btn-keypad-digit" onclick="keypadAppend('1')">1</button>
+        <button class="btn-keypad-digit" onclick="keypadAppend('2')">2</button>
+        <button class="btn-keypad-digit" onclick="keypadAppend('3')">3</button>
+        <button class="btn-keypad-digit" onclick="keypadAppend('4')">4</button>
+        <button class="btn-keypad-digit" onclick="keypadAppend('5')">5</button>
+        <button class="btn-keypad-digit" onclick="keypadAppend('6')">6</button>
+        <button class="btn-keypad-digit" onclick="keypadAppend('7')">7</button>
+        <button class="btn-keypad-digit" onclick="keypadAppend('8')">8</button>
+        <button class="btn-keypad-digit" onclick="keypadAppend('9')">9</button>
+        <button class="btn-keypad-digit" onclick="keypadToggleSign()">+/−</button>
+        <button class="btn-keypad-digit" onclick="keypadAppend('0')">0</button>
+        <button class="btn-keypad-digit" onclick="keypadBackspace()">⌫</button>
+      </div>
+
+      <div class="keypad-actions-row">
+        <button class="btn-secondary-action" onclick="closeKeypadModal()">Cancel</button>
+        <button class="btn-next-step" style="background: var(--primary);" onclick="confirmKeypadValue()">
+          <span>✓ Set Value</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- UNDO TOAST NOTIFICATION -->
   <div id="undoToast" class="toast-undo" role="alert" aria-live="assertive">
     <span id="undoToastMsg">Step completed</span>
-    <button id="btnUndoToast" class="btn-toast-action" aria-label="Undo last step tap">Undo</button>
+    <button id="btnUndoToast" class="btn-toast-action" aria-label="Undo last action">Undo</button>
   </div>
 
   <!-- ==========================================================================
-       JAVASCRIPT: SINGLE SOURCE OF TRUTH CARD DATA & APPLICATION LOGIC
+       JAVASCRIPT: SINGLE SOURCE OF TRUTH REPOSITORY & ALL TOOL CONTROLLERS
        ========================================================================== -->
   <script>
     /**
      * ============================================================================
-     * CARD DATA REPOSITORY
-     * Paste additional math procedure cards directly into this array.
+     * 1. PROCEDURE CARDS DATA
      * ============================================================================
      */
     const PROCEDURE_CARDS = [
@@ -1458,28 +2421,477 @@
 
     /**
      * ============================================================================
-     * APPLICATION STATE & STORAGE
+     * 2. EXPANDED TAP-TO-SOLVE PROBLEM BANK (ALWAYS 4 OPTIONS PER STEP)
      * ============================================================================
      */
-    const STORAGE_KEY_PROGRESS = "ryans_math_steps_progress_v1";
-    const STORAGE_KEY_CONTRAST = "ryans_math_steps_contrast_v1";
-    const STORAGE_KEY_TEXT_SIZE = "ryans_math_steps_textsize_v1";
+    const SOLVER_PROBLEMS = [
+      // 1. Two-Step Linear
+      {
+        id: "solve-p1",
+        label: "3x − 7 = 14",
+        category: "Linear",
+        type: "Two-Step Linear",
+        initialEquation: "3x − 7 = 14",
+        states: {
+          "3x − 7 = 14": {
+            choices: [
+              { action: "Add", label: "Add 7 to both sides", next: "3x = 21" },
+              { action: "Subtract", label: "Subtract 7 from both sides", next: "3x − 14 = 7" },
+              { action: "Divide", label: "Divide by 3 on both sides", next: "x − 7/3 = 14/3" },
+              { action: "Multiply", label: "Multiply all terms by 3", next: "9x − 21 = 42" }
+            ]
+          },
+          "3x = 21": {
+            choices: [
+              { action: "Divide", label: "Divide by 3 on both sides", next: "x = 7" },
+              { action: "Subtract", label: "Subtract 3 from both sides", next: "3x − 3 = 18" },
+              { action: "Multiply", label: "Multiply by 3 on both sides", next: "9x = 63" },
+              { action: "Add", label: "Add 3 to both sides", next: "3x + 3 = 24" }
+            ]
+          },
+          "x = 7": { isFinal: true },
+          "3x − 14 = 7": {
+            choices: [
+              { action: "Add", label: "Add 14 to both sides", next: "3x = 21" },
+              { action: "Subtract", label: "Subtract 7 from both sides", next: "3x − 21 = 0" },
+              { action: "Divide", label: "Divide by 3 on both sides", next: "x − 14/3 = 7/3" },
+              { action: "Multiply", label: "Multiply by 3 on both sides", next: "9x − 42 = 21" }
+            ]
+          },
+          "x − 7/3 = 14/3": {
+            choices: [
+              { action: "Add", label: "Add 7/3 to both sides", next: "x = 7" },
+              { action: "Multiply", label: "Multiply all terms by 3", next: "3x − 7 = 14" },
+              { action: "Subtract", label: "Subtract 14/3 from both sides", next: "x − 7 = 0" },
+              { action: "Divide", label: "Divide by 7 on both sides", next: "x/7 − 1/3 = 2/3" }
+            ]
+          },
+          "3x − 3 = 18": {
+            choices: [
+              { action: "Add", label: "Add 3 to both sides", next: "3x = 21" },
+              { action: "Divide", label: "Divide by 3 on both sides", next: "x − 1 = 6" },
+              { action: "Subtract", label: "Subtract 18 from both sides", next: "3x − 21 = 0" },
+              { action: "Multiply", label: "Multiply by 3 on both sides", next: "9x − 9 = 54" }
+            ]
+          },
+          "9x = 63": {
+            choices: [
+              { action: "Divide", label: "Divide by 9 on both sides", next: "x = 7" },
+              { action: "Subtract", label: "Subtract 9 from both sides", next: "9x − 9 = 54" },
+              { action: "Add", label: "Add 9 to both sides", next: "9x + 9 = 72" },
+              { action: "Divide", label: "Divide by 3 on both sides", next: "3x = 21" }
+            ]
+          },
+          "9x − 21 = 42": {
+            choices: [
+              { action: "Add", label: "Add 21 to both sides", next: "9x = 63" },
+              { action: "Divide", label: "Divide by 3 on all terms", next: "3x − 7 = 14" },
+              { action: "Subtract", label: "Subtract 42 from both sides", next: "9x − 63 = 0" },
+              { action: "Divide", label: "Divide by 9 on all terms", next: "x − 21/9 = 42/9" }
+            ]
+          },
+          "x − 1 = 6": {
+            choices: [
+              { action: "Add", label: "Add 1 to both sides", next: "x = 7" },
+              { action: "Subtract", label: "Subtract 6 from both sides", next: "x − 7 = 0" },
+              { action: "Multiply", label: "Multiply by 6 on both sides", next: "6x − 6 = 36" },
+              { action: "Divide", label: "Divide by 2 on both sides", next: "x/2 − 1/2 = 3" }
+            ]
+          }
+        }
+      },
 
-    let appState = {
+      // 2. Linear: 5x + 15 = 45
+      {
+        id: "solve-p2",
+        label: "5x + 15 = 45",
+        category: "Linear",
+        type: "Two-Step Linear",
+        initialEquation: "5x + 15 = 45",
+        states: {
+          "5x + 15 = 45": {
+            choices: [
+              { action: "Subtract", label: "Subtract 15 from both sides", next: "5x = 30" },
+              { action: "Divide", label: "Divide by 5 on all terms", next: "x + 3 = 9" },
+              { action: "Add", label: "Add 15 to both sides", next: "5x + 30 = 60" },
+              { action: "Multiply", label: "Multiply all terms by 5", next: "25x + 75 = 225" }
+            ]
+          },
+          "5x = 30": {
+            choices: [
+              { action: "Divide", label: "Divide by 5 on both sides", next: "x = 6" },
+              { action: "Subtract", label: "Subtract 5 from both sides", next: "5x − 5 = 25" },
+              { action: "Multiply", label: "Multiply by 5 on both sides", next: "25x = 150" },
+              { action: "Add", label: "Add 5 to both sides", next: "5x + 5 = 35" }
+            ]
+          },
+          "x + 3 = 9": {
+            choices: [
+              { action: "Subtract", label: "Subtract 3 from both sides", next: "x = 6" },
+              { action: "Add", label: "Add 3 to both sides", next: "x + 6 = 12" },
+              { action: "Subtract", label: "Subtract 9 from both sides", next: "x − 6 = 0" },
+              { action: "Multiply", label: "Multiply by 3 on both sides", next: "3x + 9 = 27" }
+            ]
+          },
+          "x = 6": { isFinal: true },
+          "5x + 30 = 60": {
+            choices: [
+              { action: "Subtract", label: "Subtract 30 from both sides", next: "5x = 30" },
+              { action: "Divide", label: "Divide by 5 on all terms", next: "x + 6 = 12" },
+              { action: "Subtract", label: "Subtract 60 from both sides", next: "5x − 30 = 0" },
+              { action: "Add", label: "Add 30 to both sides", next: "5x + 60 = 90" }
+            ]
+          },
+          "25x + 75 = 225": {
+            choices: [
+              { action: "Subtract", label: "Subtract 75 from both sides", next: "25x = 150" },
+              { action: "Divide", label: "Divide by 5 on all terms", next: "5x + 15 = 45" },
+              { action: "Divide", label: "Divide by 25 on all terms", next: "x + 3 = 9" },
+              { action: "Subtract", label: "Subtract 225 from both sides", next: "25x − 150 = 0" }
+            ]
+          },
+          "25x = 150": {
+            choices: [
+              { action: "Divide", label: "Divide by 25 on both sides", next: "x = 6" },
+              { action: "Divide", label: "Divide by 5 on both sides", next: "5x = 30" },
+              { action: "Subtract", label: "Subtract 25 from both sides", next: "25x − 25 = 125" },
+              { action: "Multiply", label: "Multiply by 2 on both sides", next: "50x = 300" }
+            ]
+          },
+          "x + 6 = 12": {
+            choices: [
+              { action: "Subtract", label: "Subtract 6 from both sides", next: "x = 6" },
+              { action: "Add", label: "Add 6 to both sides", next: "x + 12 = 18" },
+              { action: "Subtract", label: "Subtract 12 from both sides", next: "x − 6 = 0" },
+              { action: "Multiply", label: "Multiply by 2 on both sides", next: "2x + 12 = 24" }
+            ]
+          }
+        }
+      },
+
+      // 3. Multi-Step Quadratic: ½x² − 3x + 25 = 125
+      {
+        id: "solve-p3",
+        label: "½x² − 3x + 25 = 125",
+        category: "Quadratics",
+        type: "Multi-Step Quadratic",
+        initialEquation: "½x² − 3x + 25 = 125",
+        states: {
+          "½x² − 3x + 25 = 125": {
+            choices: [
+              { action: "Subtract", label: "Subtract 125 from both sides (Make = 0)", next: "½x² − 3x − 100 = 0" },
+              { action: "Multiply", label: "Multiply all terms by 2 (Clear fraction)", next: "x² − 6x + 50 = 250" },
+              { action: "Subtract", label: "Subtract 25 from both sides", next: "½x² − 3x = 100" },
+              { action: "Add", label: "Add 125 to both sides", next: "½x² − 3x + 150 = 250" }
+            ]
+          },
+          "½x² − 3x − 100 = 0": {
+            choices: [
+              { action: "Multiply", label: "Multiply all terms by 2 to clear fraction", next: "x² − 6x − 200 = 0" },
+              { action: "Add", label: "Add 100 to both sides", next: "½x² − 3x = 100" },
+              { action: "Subtract", label: "Subtract 100 from both sides", next: "½x² − 3x − 200 = −100" },
+              { action: "Divide", label: "Divide by ½ on all terms", next: "x² − 6x − 200 = 0" }
+            ]
+          },
+          "x² − 6x + 50 = 250": {
+            choices: [
+              { action: "Subtract", label: "Subtract 250 from both sides (Make = 0)", next: "x² − 6x − 200 = 0" },
+              { action: "Subtract", label: "Subtract 50 from both sides", next: "x² − 6x = 200" },
+              { action: "Add", label: "Add 250 to both sides", next: "x² − 6x + 300 = 500" },
+              { action: "Divide", label: "Divide by 2 on all terms", next: "½x² − 3x + 25 = 125" }
+            ]
+          },
+          "½x² − 3x = 100": {
+            choices: [
+              { action: "Multiply", label: "Multiply all terms by 2", next: "x² − 6x = 200" },
+              { action: "Subtract", label: "Subtract 100 from both sides", next: "½x² − 3x − 100 = 0" },
+              { action: "Add", label: "Add 100 to both sides", next: "½x² − 3x + 100 = 200" },
+              { action: "Divide", label: "Divide by 3 on all terms", next: "1/6x² − x = 100/3" }
+            ]
+          },
+          "x² − 6x = 200": {
+            choices: [
+              { action: "Subtract", label: "Subtract 200 from both sides (Standard Form)", next: "x² − 6x − 200 = 0" },
+              { action: "Add", label: "Add 9 to complete the square (x − 3)²", next: "(x − 3)² = 209" },
+              { action: "Add", label: "Add 200 to both sides", next: "x² − 6x + 200 = 400" },
+              { action: "Divide", label: "Divide by x on both sides", next: "x − 6 = 200/x" }
+            ]
+          },
+          "x² − 6x − 200 = 0": {
+            choices: [
+              { action: "Misc", label: "Apply Quadratic Formula (a=1, b=−6, c=−200)", next: "x = (6 ± √836) / 2" },
+              { action: "Add", label: "Add 200 to both sides", next: "x² − 6x = 200" },
+              { action: "Misc", label: "Complete Square: Add 9 to both sides", next: "(x − 3)² = 209" },
+              { action: "Subtract", label: "Subtract x² from both sides", next: "−6x − 200 = −x²" }
+            ]
+          },
+          "x = (6 ± √836) / 2": {
+            choices: [
+              { action: "Misc", label: "Calculate both branches (√836 ≈ 28.91)", next: "x ≈ 17.46 or x ≈ −11.46" },
+              { action: "Multiply", label: "Multiply by 2 on both sides", next: "2x = 6 ± √836" },
+              { action: "Subtract", label: "Subtract 6 from numerator", next: "x = ±√836 / 2" },
+              { action: "Divide", label: "Divide 6 by 2 and √836 by 2", next: "x = 3 ± √209" }
+            ]
+          },
+          "(x − 3)² = 209": {
+            choices: [
+              { action: "Misc", label: "Take Square Root of both sides (±√209)", next: "x − 3 = ±√209" },
+              { action: "Expand", label: "Expand binomial", next: "x² − 6x + 9 = 209" },
+              { action: "Subtract", label: "Subtract 209 from both sides", next: "(x − 3)² − 209 = 0" },
+              { action: "Add", label: "Add 3 to both sides", next: "(x − 3)² + 3 = 212" }
+            ]
+          },
+          "x − 3 = ±√209": {
+            choices: [
+              { action: "Add", label: "Add 3 to both sides", next: "x = 3 ± √209" },
+              { action: "Subtract", label: "Subtract 3 from both sides", next: "x − 6 = ±√209 − 3" },
+              { action: "Multiply", label: "Multiply by 2 on both sides", next: "2x − 6 = ±2√209" },
+              { action: "Misc", label: "Calculate decimal approximation (√209 ≈ 14.46)", next: "x ≈ 17.46 or x ≈ −11.46" }
+            ]
+          },
+          "x = 3 ± √209": {
+            choices: [
+              { action: "Misc", label: "Evaluate decimal: 3 + 14.46 and 3 − 14.46", next: "x ≈ 17.46 or x ≈ −11.46" },
+              { action: "Subtract", label: "Subtract 3 from both sides", next: "x − 3 = ±√209" },
+              { action: "Multiply", label: "Square both sides", next: "(x − 3)² = 209" },
+              { action: "Add", label: "Add 3 to both sides", next: "x + 3 = 6 ± √209" }
+            ]
+          },
+          "x ≈ 17.46 or x ≈ −11.46": { isFinal: true }
+        }
+      },
+
+      // 4. Distributive: 2(3x − 4) + 4x = 32
+      {
+        id: "solve-p4",
+        label: "2(3x − 4) + 4x = 32",
+        category: "MultiStep",
+        type: "Distributive & Like Terms",
+        initialEquation: "2(3x − 4) + 4x = 32",
+        states: {
+          "2(3x − 4) + 4x = 32": {
+            choices: [
+              { action: "Multiply", label: "Distribute 2 across (3x − 4)", next: "6x − 8 + 4x = 32" },
+              { action: "Divide", label: "Divide all terms by 2", next: "3x − 4 + 2x = 16" },
+              { action: "Subtract", label: "Subtract 4x from both sides", next: "2(3x − 4) = 32 − 4x" },
+              { action: "Subtract", label: "Subtract 32 from both sides", next: "2(3x − 4) + 4x − 32 = 0" }
+            ]
+          },
+          "6x − 8 + 4x = 32": {
+            choices: [
+              { action: "Add", label: "Combine like terms (6x + 4x)", next: "10x − 8 = 32" },
+              { action: "Add", label: "Add 8 to both sides", next: "10x = 40" },
+              { action: "Subtract", label: "Subtract 32 from both sides", next: "10x − 40 = 0" },
+              { action: "Divide", label: "Divide all terms by 2", next: "3x − 4 + 2x = 16" }
+            ]
+          },
+          "3x − 4 + 2x = 16": {
+            choices: [
+              { action: "Add", label: "Combine like terms (3x + 2x)", next: "5x − 4 = 16" },
+              { action: "Add", label: "Add 4 to both sides", next: "5x = 20" },
+              { action: "Subtract", label: "Subtract 16 from both sides", next: "5x − 20 = 0" },
+              { action: "Multiply", label: "Multiply by 2 on both sides", next: "6x − 8 + 4x = 32" }
+            ]
+          },
+          "5x − 4 = 16": {
+            choices: [
+              { action: "Add", label: "Add 4 to both sides", next: "5x = 20" },
+              { action: "Subtract", label: "Subtract 16 from both sides", next: "5x − 20 = 0" },
+              { action: "Divide", label: "Divide by 5 on all terms", next: "x − 4/5 = 16/5" },
+              { action: "Multiply", label: "Multiply all terms by 5", next: "25x − 20 = 80" }
+            ]
+          },
+          "5x = 20": {
+            choices: [
+              { action: "Divide", label: "Divide by 5 on both sides", next: "x = 4" },
+              { action: "Subtract", label: "Subtract 5 from both sides", next: "5x − 5 = 15" },
+              { action: "Multiply", label: "Multiply by 5 on both sides", next: "25x = 100" },
+              { action: "Add", label: "Add 5 to both sides", next: "5x + 5 = 25" }
+            ]
+          },
+          "10x − 8 = 32": {
+            choices: [
+              { action: "Add", label: "Add 8 to both sides", next: "10x = 40" },
+              { action: "Divide", label: "Divide by 2 on all terms", next: "5x − 4 = 16" },
+              { action: "Subtract", label: "Subtract 32 from both sides", next: "10x − 40 = 0" },
+              { action: "Divide", label: "Divide by 10 on all terms", next: "x − 0.8 = 3.2" }
+            ]
+          },
+          "10x = 40": {
+            choices: [
+              { action: "Divide", label: "Divide by 10 on both sides", next: "x = 4" },
+              { action: "Divide", label: "Divide by 2 on both sides", next: "5x = 20" },
+              { action: "Subtract", label: "Subtract 10 from both sides", next: "10x − 10 = 30" },
+              { action: "Multiply", label: "Multiply by 10 on both sides", next: "100x = 400" }
+            ]
+          },
+          "x = 4": { isFinal: true }
+        }
+      },
+
+      // 5. Fractions Clearing: (1/2)x + 3 = (3/4)x − 1
+      {
+        id: "solve-p5",
+        label: "½x + 3 = ¾x − 1",
+        category: "Fractions",
+        type: "Clearing Fractions",
+        initialEquation: "½x + 3 = ¾x − 1",
+        states: {
+          "½x + 3 = ¾x − 1": {
+            choices: [
+              { action: "Multiply", label: "Multiply all terms by LCD (4)", next: "2x + 12 = 3x − 4" },
+              { action: "Subtract", label: "Subtract 3 from both sides", next: "½x = ¾x − 4" },
+              { action: "Subtract", label: "Subtract ½x from both sides", next: "3 = ¼x − 1" },
+              { action: "Add", label: "Add 1 to both sides", next: "½x + 4 = ¾x" }
+            ]
+          },
+          "2x + 12 = 3x − 4": {
+            choices: [
+              { action: "Subtract", label: "Subtract 2x from both sides", next: "12 = x − 4" },
+              { action: "Subtract", label: "Subtract 3x from both sides", next: "−x + 12 = −4" },
+              { action: "Subtract", label: "Subtract 12 from both sides", next: "2x = 3x − 16" },
+              { action: "Add", label: "Add 4 to both sides", next: "2x + 16 = 3x" }
+            ]
+          },
+          "12 = x − 4": {
+            choices: [
+              { action: "Add", label: "Add 4 to both sides", next: "x = 16" },
+              { action: "Subtract", label: "Subtract 12 from both sides", next: "0 = x − 16" },
+              { action: "Subtract", label: "Subtract 4 from both sides", next: "8 = x − 8" },
+              { action: "Multiply", label: "Multiply by 4 on both sides", next: "48 = 4x − 16" }
+            ]
+          },
+          "2x + 16 = 3x": {
+            choices: [
+              { action: "Subtract", label: "Subtract 2x from both sides", next: "x = 16" },
+              { action: "Subtract", label: "Subtract 3x from both sides", next: "−x + 16 = 0" },
+              { action: "Subtract", label: "Subtract 16 from both sides", next: "2x = 3x − 16" },
+              { action: "Divide", label: "Divide by 2 on all terms", next: "x + 8 = 1.5x" }
+            ]
+          },
+          "3 = ¼x − 1": {
+            choices: [
+              { action: "Add", label: "Add 1 to both sides", next: "4 = ¼x" },
+              { action: "Multiply", label: "Multiply all terms by 4", next: "12 = x − 4" },
+              { action: "Subtract", label: "Subtract 3 from both sides", next: "0 = ¼x − 4" },
+              { action: "Multiply", label: "Multiply by 2 on all terms", next: "6 = ½x − 2" }
+            ]
+          },
+          "4 = ¼x": {
+            choices: [
+              { action: "Multiply", label: "Multiply by 4 on both sides", next: "x = 16" },
+              { action: "Divide", label: "Divide by 4 on both sides", next: "1 = 1/16x" },
+              { action: "Subtract", label: "Subtract 4 from both sides", next: "0 = ¼x − 4" },
+              { action: "Add", label: "Add 4 to both sides", next: "8 = ¼x + 4" }
+            ]
+          },
+          "x = 16": { isFinal: true }
+        }
+      },
+
+      // 6. Quadratic Factoring: x² − 6x − 40 = 0
+      {
+        id: "solve-p6",
+        label: "x² − 6x − 40 = 0",
+        category: "Quadratics",
+        type: "Factoring Quadratics",
+        initialEquation: "x² − 6x − 40 = 0",
+        states: {
+          "x² − 6x − 40 = 0": {
+            choices: [
+              { action: "Misc", label: "Factor into (x − 10)(x + 4) = 0", next: "(x − 10)(x + 4) = 0" },
+              { action: "Add", label: "Add 40 to both sides", next: "x² − 6x = 40" },
+              { action: "Misc", label: "Apply Formula: a=1, b=−6, c=−40 (D=196)", next: "x = (6 ± 14) / 2" },
+              { action: "Add", label: "Complete Square: Add 9 to both sides", next: "(x − 3)² = 49" }
+            ]
+          },
+          "(x − 10)(x + 4) = 0": {
+            choices: [
+              { action: "Misc", label: "Zero Product Property: x = 10 or x = −4", next: "x = 10 or x = −4" },
+              { action: "Add", label: "Add 10 to both sides", next: "(x)(x + 4) = 10" },
+              { action: "Subtract", label: "Subtract 4 from both sides", next: "(x − 10)(x) = −4" },
+              { action: "Expand", label: "Expand back to polynomial", next: "x² − 6x − 40 = 0" }
+            ]
+          },
+          "x = (6 ± 14) / 2": {
+            choices: [
+              { action: "Misc", label: "Calculate Plus (20/2) and Minus (−8/2)", next: "x = 10 or x = −4" },
+              { action: "Multiply", label: "Multiply by 2 on both sides", next: "2x = 6 ± 14" },
+              { action: "Divide", label: "Divide 6 by 2 and 14 by 2", next: "x = 3 ± 7" },
+              { action: "Add", label: "Add 14 to numerator", next: "x = 20 / 2" }
+            ]
+          },
+          "(x − 3)² = 49": {
+            choices: [
+              { action: "Misc", label: "Take Square Root of both sides (±7)", next: "x − 3 = ±7" },
+              { action: "Subtract", label: "Subtract 49 from both sides", next: "(x − 3)² − 49 = 0" },
+              { action: "Expand", label: "Expand to x² − 6x + 9 = 49", next: "x² − 6x = 40" },
+              { action: "Add", label: "Add 3 to both sides", next: "(x − 3)² + 3 = 52" }
+            ]
+          },
+          "x − 3 = ±7": {
+            choices: [
+              { action: "Add", label: "Add 3 to both sides (3 + 7 and 3 − 7)", next: "x = 10 or x = −4" },
+              { action: "Subtract", label: "Subtract 3 from both sides", next: "x − 6 = ±7 − 3" },
+              { action: "Multiply", label: "Multiply by 2 on both sides", next: "2x − 6 = ±14" },
+              { action: "Add", label: "Add 7 to both sides", next: "x + 4 = 14 or x + 4 = 0" }
+            ]
+          },
+          "x² − 6x = 40": {
+            choices: [
+              { action: "Subtract", label: "Subtract 40 from both sides (Make = 0)", next: "x² − 6x − 40 = 0" },
+              { action: "Add", label: "Add 9 to complete the square", next: "(x − 3)² = 49" },
+              { action: "Add", label: "Add 40 to both sides", next: "x² − 6x + 40 = 80" },
+              { action: "Divide", label: "Divide by x on all terms", next: "x − 6 = 40/x" }
+            ]
+          },
+          "x = 10 or x = −4": { isFinal: true }
+        }
+      }
+    ];
+
+    /**
+     * ============================================================================
+     * 3. STUDIO STATE & STORAGE
+     * ============================================================================
+     */
+    const STORAGE_KEY_PROGRESS = "ryans_math_studio_progress_v3";
+    const STORAGE_KEY_CONTRAST = "ryans_math_studio_contrast_v3";
+    const STORAGE_KEY_TEXT_SIZE = "ryans_math_studio_textsize_v3";
+
+    let studioState = {
+      activeModule: "hubView",
+      activeCategory: "ALL",
+      cardProgress: {},
       activeCardId: null,
       currentStepIndex: 0,
-      activeCategory: "ALL",
-      cardProgress: {}, // { [cardId]: currentStepIndex }
-      exampleOpen: false
+      exampleOpen: false,
+
+      // Solver State
+      solverProblemIndex: 0,
+      solverCategory: "ALL",
+      solverCurrentEq: "",
+      solverHistory: [],
+
+      // Shelf State
+      activeSlotTarget: null,
+      slots: {
+        slotQuadA: 1,
+        slotQuadB: -6,
+        slotQuadC: -40,
+        slotDenom1: 4,
+        slotDenom2: 3,
+        slotFree1: 0,
+        slotFree2: 0,
+        slotFree3: 0,
+        slotFree4: 0
+      }
     };
 
-    // Load persisted state
     function loadSavedState() {
       try {
         const savedProgress = localStorage.getItem(STORAGE_KEY_PROGRESS);
-        if (savedProgress) {
-          appState.cardProgress = JSON.parse(savedProgress);
-        }
+        if (savedProgress) studioState.cardProgress = JSON.parse(savedProgress);
         const savedContrast = localStorage.getItem(STORAGE_KEY_CONTRAST);
         if (savedContrast === "true") {
           document.body.classList.add("high-contrast");
@@ -1490,42 +2902,34 @@
           document.body.classList.add("text-xl");
           document.getElementById("textSizeToggleBtn").setAttribute("aria-pressed", "true");
         }
-      } catch (e) {
-        console.warn("LocalStorage access error:", e);
-      }
+      } catch (e) {}
     }
 
-    function saveProgress() {
+    function saveCardProgress() {
       try {
-        localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(appState.cardProgress));
-      } catch (e) {
-        console.warn("Unable to save progress to LocalStorage:", e);
-      }
+        localStorage.setItem(STORAGE_KEY_PROGRESS, JSON.stringify(studioState.cardProgress));
+      } catch (e) {}
     }
 
     /**
      * ============================================================================
-     * AUDIO FEEDBACK (Gentle synth click/chime for feedback)
+     * 4. AUDIO SYNTHESIS
      * ============================================================================
      */
     let audioCtx = null;
-    function playGentleCue(type = "next") {
+    function playAudioTone(type = "next") {
       try {
-        if (!audioCtx) {
-          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        }
-        if (audioCtx.state === "suspended") {
-          audioCtx.resume();
-        }
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === "suspended") audioCtx.resume();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.connect(gain);
         gain.connect(audioCtx.destination);
 
         const now = audioCtx.currentTime;
-        if (type === "next") {
-          osc.frequency.setValueAtTime(440, now);
-          osc.frequency.exponentialRampToValueAtTime(660, now + 0.12);
+        if (type === "next" || type === "pill") {
+          osc.frequency.setValueAtTime(480, now);
+          osc.frequency.exponentialRampToValueAtTime(720, now + 0.12);
           gain.gain.setValueAtTime(0.12, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.12);
           osc.start(now);
@@ -1538,82 +2942,94 @@
           osc.start(now);
           osc.stop(now + 0.25);
         } else if (type === "prev") {
-          osc.frequency.setValueAtTime(400, now);
+          osc.frequency.setValueAtTime(420, now);
           osc.frequency.exponentialRampToValueAtTime(320, now + 0.1);
           gain.gain.setValueAtTime(0.1, now);
           gain.gain.exponentialRampToValueAtTime(0.001, now + 0.1);
           osc.start(now);
           osc.stop(now + 0.1);
         }
-      } catch (e) {
-        // Audio not available or blocked, non-critical
+      } catch (e) {}
+    }
+
+    /**
+     * ============================================================================
+     * 5. MODULE NAVIGATION & SWITCHING
+     * ============================================================================
+     */
+    function switchModule(targetModuleId) {
+      studioState.activeModule = targetModuleId;
+
+      document.querySelectorAll(".btn-tool-tab").forEach(tab => {
+        const matches = tab.getAttribute("data-target") === targetModuleId;
+        tab.classList.toggle("active", matches);
+      });
+
+      document.querySelectorAll(".module-view").forEach(view => {
+        view.classList.remove("active");
+      });
+      const activeView = document.getElementById(targetModuleId);
+      if (activeView) activeView.classList.add("active");
+
+      window.scrollTo({ top: 0, behavior: "smooth" });
+
+      if (targetModuleId === "stepCardsView") renderStepCardsLibrary();
+      else if (targetModuleId === "solverView") initSolverWorkbench();
+      else if (targetModuleId === "shelfView") updateShelfCalculations();
+    }
+
+    document.querySelectorAll(".btn-tool-tab").forEach(tab => {
+      tab.addEventListener("click", () => switchModule(tab.getAttribute("data-target")));
+    });
+
+    document.getElementById("tileCards").addEventListener("click", () => switchModule("stepCardsView"));
+    document.getElementById("tileSolver").addEventListener("click", () => switchModule("solverView"));
+    document.getElementById("tileShelf").addEventListener("click", () => switchModule("shelfView"));
+    document.getElementById("logoLink").addEventListener("click", () => switchModule("hubView"));
+    document.getElementById("logoLink").addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        switchModule("hubView");
       }
-    }
+    });
 
     /**
      * ============================================================================
-     * TOAST / UNDO NOTIFICATION
+     * 6. MODULE 1: PROCEDURE STEP CARDS CONTROLLER
      * ============================================================================
      */
-    let toastTimeout = null;
-    function showUndoToast(message, undoCallback) {
-      const toast = document.getElementById("undoToast");
-      const msgElem = document.getElementById("undoToastMsg");
-      const btnUndo = document.getElementById("btnUndoToast");
+    function renderStepCardsLibrary() {
+      const librarySub = document.getElementById("librarySubView");
+      const guidedSub = document.getElementById("guidedSubView");
+      librarySub.style.display = "block";
+      guidedSub.style.display = "none";
 
-      msgElem.textContent = message;
-      toast.classList.add("show");
-
-      btnUndo.onclick = () => {
-        toast.classList.remove("show");
-        if (undoCallback) undoCallback();
-      };
-
-      if (toastTimeout) clearTimeout(toastTimeout);
-      toastTimeout = setTimeout(() => {
-        toast.classList.remove("show");
-      }, 5000);
-    }
-
-    /**
-     * ============================================================================
-     * RENDER LIBRARY VIEW
-     * ============================================================================
-     */
-    function renderLibrary() {
-      const libraryView = document.getElementById("libraryView");
-      const guidedView = document.getElementById("guidedView");
-      libraryView.classList.add("active");
-      guidedView.classList.remove("active");
-
-      // Extract unique categories
       const categories = ["ALL", ...new Set(PROCEDURE_CARDS.map(c => c.category))];
       const filterBar = document.getElementById("categoryFilterBar");
       filterBar.innerHTML = "";
 
       categories.forEach(cat => {
         const btn = document.createElement("button");
-        btn.className = `filter-btn ${appState.activeCategory === cat ? 'active' : ''}`;
-        btn.setAttribute("aria-pressed", appState.activeCategory === cat ? "true" : "false");
+        btn.className = `filter-btn ${studioState.activeCategory === cat ? 'active' : ''}`;
+        btn.setAttribute("aria-pressed", studioState.activeCategory === cat ? "true" : "false");
         btn.textContent = cat === "ALL" ? "🌟 All Procedures" : cat;
         btn.addEventListener("click", () => {
-          appState.activeCategory = cat;
-          renderLibrary();
+          studioState.activeCategory = cat;
+          renderStepCardsLibrary();
         });
         filterBar.appendChild(btn);
       });
 
-      // Filter cards
-      const filteredCards = appState.activeCategory === "ALL" 
-        ? PROCEDURE_CARDS 
-        : PROCEDURE_CARDS.filter(c => c.category === appState.activeCategory);
+      const filtered = studioState.activeCategory === "ALL"
+        ? PROCEDURE_CARDS
+        : PROCEDURE_CARDS.filter(c => c.category === studioState.activeCategory);
 
-      const cardsGrid = document.getElementById("cardsGrid");
-      cardsGrid.innerHTML = "";
+      const grid = document.getElementById("cardsGrid");
+      grid.innerHTML = "";
 
-      filteredCards.forEach(card => {
+      filtered.forEach(card => {
         const totalSteps = card.steps.length;
-        const savedStep = appState.cardProgress[card.id] || 0;
+        const savedStep = studioState.cardProgress[card.id] || 0;
         const isCompleted = savedStep >= totalSteps;
         const hasStarted = savedStep > 0 && !isCompleted;
 
@@ -1646,51 +3062,40 @@
           </div>
         `;
 
-        const openCardHandler = () => openGuidedCard(card.id);
-        cardElem.addEventListener("click", openCardHandler);
+        const openHandler = () => openGuidedCard(card.id);
+        cardElem.addEventListener("click", openHandler);
         cardElem.addEventListener("keydown", (e) => {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
-            openCardHandler();
+            openHandler();
           }
         });
 
-        cardsGrid.appendChild(cardElem);
+        grid.appendChild(cardElem);
       });
     }
 
-    /**
-     * ============================================================================
-     * GUIDED MODE: OPEN & RENDER STEP
-     * ============================================================================
-     */
     function openGuidedCard(cardId, targetStepIndex = null) {
       const card = PROCEDURE_CARDS.find(c => c.id === cardId);
       if (!card) return;
 
-      appState.activeCardId = cardId;
-      
+      studioState.activeCardId = cardId;
       if (targetStepIndex !== null) {
-        appState.currentStepIndex = targetStepIndex;
+        studioState.currentStepIndex = targetStepIndex;
       } else {
-        // Resume from saved step, or 0
-        const saved = appState.cardProgress[cardId] || 0;
-        appState.currentStepIndex = (saved < card.steps.length) ? saved : 0;
+        const saved = studioState.cardProgress[cardId] || 0;
+        studioState.currentStepIndex = (saved < card.steps.length) ? saved : 0;
       }
+      studioState.exampleOpen = false;
 
-      appState.exampleOpen = false;
-
-      // Switch View
-      document.getElementById("libraryView").classList.remove("active");
-      document.getElementById("guidedView").classList.add("active");
+      document.getElementById("librarySubView").style.display = "none";
+      document.getElementById("guidedSubView").style.display = "block";
       window.scrollTo({ top: 0, behavior: "smooth" });
 
-      // Render static card info
       document.getElementById("currentProcedureTitle").textContent = `${card.icon || '📌'} ${card.title}`;
       document.getElementById("currentProcedureSubtitle").textContent = card.subtitle;
       document.getElementById("guidedCategoryTag").textContent = card.category;
 
-      // Sports Note
       const sportsBox = document.getElementById("sportsNoteBox");
       if (card.sportsNote) {
         document.getElementById("sportsNoteText").textContent = card.sportsNote;
@@ -1699,10 +3104,7 @@
         sportsBox.style.display = "none";
       }
 
-      // Worked Example
       renderWorkedExample(card.workedExample);
-
-      // Render the current step
       renderCurrentStep();
     }
 
@@ -1729,8 +3131,7 @@
         stepsList.appendChild(li);
       });
 
-      // Update toggle state
-      if (appState.exampleOpen) {
+      if (studioState.exampleOpen) {
         body.classList.add("open");
         toggleBtn.setAttribute("aria-expanded", "true");
         toggleBtn.querySelector("span:first-child").textContent = "📖 Hide Worked Example";
@@ -1744,18 +3145,17 @@
     }
 
     function renderCurrentStep() {
-      const card = PROCEDURE_CARDS.find(c => c.id === appState.activeCardId);
+      const card = PROCEDURE_CARDS.find(c => c.id === studioState.activeCardId);
       if (!card) return;
 
       const totalSteps = card.steps.length;
-      const stepIdx = appState.currentStepIndex;
+      const stepIdx = studioState.currentStepIndex;
       const isFinished = stepIdx >= totalSteps;
 
       const heroCard = document.getElementById("heroStepCard");
       const actionsStack = document.getElementById("guidedActionsStack");
       const completionCard = document.getElementById("completionCard");
 
-      // Progress bar & Dots
       const dotsContainer = document.getElementById("progressDotsContainer");
       dotsContainer.innerHTML = "";
       dotsContainer.setAttribute("aria-valuenow", isFinished ? totalSteps : stepIdx + 1);
@@ -1764,16 +3164,12 @@
       for (let i = 0; i < totalSteps; i++) {
         const seg = document.createElement("div");
         seg.className = "progress-segment";
-        if (i < stepIdx) {
-          seg.classList.add("completed");
-        } else if (i === stepIdx && !isFinished) {
-          seg.classList.add("current");
-        }
+        if (i < stepIdx) seg.classList.add("completed");
+        else if (i === stepIdx && !isFinished) seg.classList.add("current");
         dotsContainer.appendChild(seg);
       }
 
       if (isFinished) {
-        // Completed State
         document.getElementById("stepProgressLabel").textContent = "All Steps Complete!";
         document.getElementById("stepProgressPercent").textContent = "100%";
 
@@ -1782,20 +3178,17 @@
         completionCard.classList.add("active");
         document.getElementById("finalCheckText").textContent = card.finalCheck || "Did you double-check your final answer?";
 
-        // Save completed in state
-        appState.cardProgress[card.id] = totalSteps;
-        saveProgress();
-        playGentleCue("complete");
+        studioState.cardProgress[card.id] = totalSteps;
+        saveCardProgress();
+        playAudioTone("complete");
         return;
       }
 
-      // Active Step State
       heroCard.style.display = "block";
       actionsStack.style.display = "flex";
       completionCard.classList.remove("active");
 
       const currentStep = card.steps[stepIdx];
-
       document.getElementById("stepProgressLabel").textContent = `Step ${stepIdx + 1} of ${totalSteps}`;
       document.getElementById("stepProgressPercent").textContent = `${Math.round(((stepIdx) / totalSteps) * 100)}%`;
 
@@ -1811,7 +3204,6 @@
         cueBox.style.display = "none";
       }
 
-      // Next button text
       const nextBtn = document.getElementById("btnNextStep");
       if (stepIdx === totalSteps - 1) {
         nextBtn.innerHTML = `<span>Complete Final Step & Check</span> <span aria-hidden="true">✓</span>`;
@@ -1819,130 +3211,443 @@
         nextBtn.innerHTML = `<span>Done — Next Step</span> <span aria-hidden="true">➔</span>`;
       }
 
-      // Previous button state
       const prevBtn = document.getElementById("btnPrevStep");
       prevBtn.disabled = (stepIdx === 0);
 
-      // Save progress
-      appState.cardProgress[card.id] = stepIdx;
-      saveProgress();
+      studioState.cardProgress[card.id] = stepIdx;
+      saveCardProgress();
     }
 
-    /**
-     * ============================================================================
-     * EVENT HANDLERS & STEP NAVIGATION
-     * ============================================================================
-     */
     function handleNextStep() {
-      const card = PROCEDURE_CARDS.find(c => c.id === appState.activeCardId);
+      const card = PROCEDURE_CARDS.find(c => c.id === studioState.activeCardId);
       if (!card) return;
 
-      const prevIndex = appState.currentStepIndex;
-      appState.currentStepIndex++;
-      playGentleCue("next");
+      const prevIndex = studioState.currentStepIndex;
+      studioState.currentStepIndex++;
+      playAudioTone("next");
       renderCurrentStep();
 
-      // Offer easy 1-tap undo toast
-      showUndoToast(`Moved to Step ${appState.currentStepIndex + 1}`, () => {
-        appState.currentStepIndex = prevIndex;
-        playGentleCue("prev");
+      showUndoToast(`Moved to Step ${studioState.currentStepIndex + 1}`, () => {
+        studioState.currentStepIndex = prevIndex;
+        playAudioTone("prev");
         renderCurrentStep();
       });
     }
 
     function handlePrevStep() {
-      if (appState.currentStepIndex > 0) {
-        appState.currentStepIndex--;
-        playGentleCue("prev");
+      if (studioState.currentStepIndex > 0) {
+        studioState.currentStepIndex--;
+        playAudioTone("prev");
         renderCurrentStep();
       }
     }
 
     function handleResetProcedure() {
-      const prevIndex = appState.currentStepIndex;
-      appState.currentStepIndex = 0;
-      playGentleCue("prev");
+      const prevIndex = studioState.currentStepIndex;
+      studioState.currentStepIndex = 0;
+      playAudioTone("prev");
       renderCurrentStep();
 
       showUndoToast("Restarted procedure from Step 1", () => {
-        appState.currentStepIndex = prevIndex;
+        studioState.currentStepIndex = prevIndex;
         renderCurrentStep();
       });
     }
 
-    // Toggle worked example
-    document.getElementById("toggleExampleBtn").addEventListener("click", () => {
-      appState.exampleOpen = !appState.exampleOpen;
-      const card = PROCEDURE_CARDS.find(c => c.id === appState.activeCardId);
-      if (card) renderWorkedExample(card.workedExample);
-    });
-
-    // Primary Buttons
     document.getElementById("btnNextStep").addEventListener("click", handleNextStep);
     document.getElementById("btnPrevStep").addEventListener("click", handlePrevStep);
     document.getElementById("btnResetProcedure").addEventListener("click", handleResetProcedure);
-    
-    // Completion Buttons
+    document.getElementById("btnBackToLibrary").addEventListener("click", renderStepCardsLibrary);
+    document.getElementById("btnDoneReturnHome").addEventListener("click", renderStepCardsLibrary);
     document.getElementById("btnRepeatProcedure").addEventListener("click", () => {
-      appState.currentStepIndex = 0;
+      studioState.currentStepIndex = 0;
       renderCurrentStep();
     });
-
-    document.getElementById("btnDoneReturnHome").addEventListener("click", () => {
-      renderLibrary();
+    document.getElementById("toggleExampleBtn").addEventListener("click", () => {
+      studioState.exampleOpen = !studioState.exampleOpen;
+      const card = PROCEDURE_CARDS.find(c => c.id === studioState.activeCardId);
+      if (card) renderWorkedExample(card.workedExample);
     });
 
-    // Back to library
-    document.getElementById("btnBackToLibrary").addEventListener("click", () => {
-      renderLibrary();
-    });
-    document.getElementById("logoLink").addEventListener("click", (e) => {
-      e.preventDefault();
-      renderLibrary();
+    /**
+     * ============================================================================
+     * 7. MODULE 2: TAP-TO-SOLVE WORKBENCH (ALWAYS 4 OPTIONS & CLEAR VERBS)
+     * ============================================================================
+     */
+    function initSolverWorkbench() {
+      // Category buttons setup
+      document.querySelectorAll(".solver-cat-btn").forEach(btn => {
+        btn.onclick = () => {
+          document.querySelectorAll(".solver-cat-btn").forEach(b => b.classList.remove("active"));
+          btn.classList.add("active");
+          studioState.solverCategory = btn.getAttribute("data-cat");
+          renderSolverProblemPicker();
+        };
+      });
+
+      renderSolverProblemPicker();
+      loadSolverProblem(studioState.solverProblemIndex);
+    }
+
+    function renderSolverProblemPicker() {
+      const picker = document.getElementById("solverProblemPicker");
+      picker.innerHTML = "";
+
+      const filtered = studioState.solverCategory === "ALL"
+        ? SOLVER_PROBLEMS
+        : SOLVER_PROBLEMS.filter(p => p.category === studioState.solverCategory);
+
+      filtered.forEach(prob => {
+        const globalIdx = SOLVER_PROBLEMS.findIndex(p => p.id === prob.id);
+        const btn = document.createElement("button");
+        btn.className = `problem-pill-btn ${studioState.solverProblemIndex === globalIdx ? 'active' : ''}`;
+        btn.textContent = `${prob.type}: ${prob.label}`;
+        btn.addEventListener("click", () => {
+          loadSolverProblem(globalIdx);
+        });
+        picker.appendChild(btn);
+      });
+    }
+
+    function loadSolverProblem(idx) {
+      studioState.solverProblemIndex = idx;
+      const prob = SOLVER_PROBLEMS[idx];
+      studioState.solverCurrentEq = prob.initialEquation;
+      studioState.solverHistory = [
+        { move: "Starting Equation", equation: prob.initialEquation }
+      ];
+
+      document.querySelectorAll(".problem-pill-btn").forEach(btn => {
+        btn.classList.toggle("active", btn.textContent.includes(prob.label));
+      });
+
+      renderSolverState();
+    }
+
+    function renderSolverState() {
+      const prob = SOLVER_PROBLEMS[studioState.solverProblemIndex];
+      const curEq = studioState.solverCurrentEq;
+      const stateObj = prob.states[curEq] || {};
+
+      document.getElementById("solverProblemLabel").textContent = `${prob.type}: ${prob.label}`;
+      document.getElementById("solverCurrentEquation").textContent = curEq;
+
+      const histList = document.getElementById("solverHistoryList");
+      histList.innerHTML = "";
+      studioState.solverHistory.forEach(item => {
+        const li = document.createElement("li");
+        li.className = "history-row";
+        li.innerHTML = `
+          <span>${item.equation}</span>
+          <span class="history-move-badge">${item.move}</span>
+        `;
+        histList.appendChild(li);
+      });
+
+      const solvedCard = document.getElementById("solverSolvedCard");
+      const pillsSection = document.getElementById("solverPillsSection");
+      const pillsGrid = document.getElementById("solverPillsGrid");
+      pillsGrid.innerHTML = "";
+
+      if (stateObj.isFinal) {
+        solvedCard.classList.add("active");
+        pillsSection.style.display = "none";
+        playAudioTone("complete");
+        return;
+      }
+
+      solvedCard.classList.remove("active");
+      pillsSection.style.display = "block";
+
+      let choices = stateObj.choices ? [...stateObj.choices] : [];
+
+      // Guarantee exactly 4 options by adding standard fallback operations if ever needed
+      if (choices.length < 4) {
+        const defaultPool = [
+          { action: "Add", label: "Add 10 to both sides", next: curEq + " + 10" },
+          { action: "Subtract", label: "Subtract 10 from both sides", next: curEq + " − 10" },
+          { action: "Multiply", label: "Multiply by 2 on both sides", next: "2(" + curEq + ")" },
+          { action: "Divide", label: "Divide by 2 on both sides", next: "(" + curEq + ") / 2" }
+        ];
+        defaultPool.forEach(def => {
+          if (choices.length < 4 && !choices.some(c => c.label === def.label)) {
+            choices.push(def);
+          }
+        });
+      }
+
+      choices.slice(0, 4).forEach(ch => {
+        const pill = document.createElement("button");
+        pill.className = "btn-operation-pill";
+
+        let tagClass = "pill-tag-misc";
+        let tagText = ch.action || "MOVE";
+        if (ch.action === "Add") { tagClass = "pill-tag-add"; tagText = "ADD (+)"; }
+        else if (ch.action === "Subtract") { tagClass = "pill-tag-sub"; tagText = "SUBTRACT (−)"; }
+        else if (ch.action === "Multiply") { tagClass = "pill-tag-mul"; tagText = "MULTIPLY (×)"; }
+        else if (ch.action === "Divide") { tagClass = "pill-tag-div"; tagText = "DIVIDE (/)"; }
+
+        pill.innerHTML = `
+          <span class="pill-action-tag ${tagClass}">${tagText}</span>
+          <span style="flex: 1;">${ch.label}</span>
+          <span aria-hidden="true">➔</span>
+        `;
+        pill.addEventListener("click", () => {
+          executeSolverMove(ch.label, ch.next);
+        });
+        pillsGrid.appendChild(pill);
+      });
+    }
+
+    function executeSolverMove(moveLabel, nextEquation) {
+      studioState.solverHistory.push({ move: moveLabel, equation: nextEquation });
+      studioState.solverCurrentEq = nextEquation;
+      playAudioTone("pill");
+      renderSolverState();
+
+      showUndoToast(`Applied: ${moveLabel}`, () => {
+        handleSolverUndo();
+      });
+    }
+
+    function handleSolverUndo() {
+      if (studioState.solverHistory.length > 1) {
+        studioState.solverHistory.pop();
+        const last = studioState.solverHistory[studioState.solverHistory.length - 1];
+        studioState.solverCurrentEq = last.equation;
+        playAudioTone("prev");
+        renderSolverState();
+      }
+    }
+
+    function handleSolverRestart() {
+      const prob = SOLVER_PROBLEMS[studioState.solverProblemIndex];
+      studioState.solverCurrentEq = prob.initialEquation;
+      studioState.solverHistory = [
+        { move: "Starting Equation", equation: prob.initialEquation }
+      ];
+      playAudioTone("prev");
+      renderSolverState();
+    }
+
+    document.getElementById("btnSolverUndo").addEventListener("click", handleSolverUndo);
+    document.getElementById("btnSolverRestart").addEventListener("click", handleSolverRestart);
+    document.getElementById("btnSolverNextProblem").addEventListener("click", () => {
+      const nextIdx = (studioState.solverProblemIndex + 1) % SOLVER_PROBLEMS.length;
+      loadSolverProblem(nextIdx);
     });
 
-    // Accessibility Toggles
+    /**
+     * ============================================================================
+     * 8. MODULE 3: WORKING MEMORY SHELF (DIRECT TYPING & KEYPAD MODAL)
+     * ============================================================================
+     */
+    function adjustSlot(slotKey, delta) {
+      if (typeof studioState.slots[slotKey] === "undefined") {
+        studioState.slots[slotKey] = 0;
+      }
+      studioState.slots[slotKey] += delta;
+      document.getElementById(slotKey).textContent = studioState.slots[slotKey];
+      playAudioTone("pill");
+      updateShelfCalculations();
+    }
+
+    function resetFreeSlots() {
+      ['slotFree1', 'slotFree2', 'slotFree3', 'slotFree4'].forEach(k => {
+        studioState.slots[k] = 0;
+        document.getElementById(k).textContent = '0';
+      });
+      playAudioTone("prev");
+    }
+
+    function updateShelfCalculations() {
+      const a = studioState.slots.slotQuadA || 1;
+      const b = studioState.slots.slotQuadB || -6;
+      const c = studioState.slots.slotQuadC || -40;
+
+      const b2 = b * b;
+      const fourAC = 4 * a * c;
+      const D = b2 - fourAC;
+
+      document.getElementById("slotQuadA").textContent = a;
+      document.getElementById("slotQuadB").textContent = b;
+      document.getElementById("slotQuadC").textContent = c;
+
+      const detailText = `(${b})² − 4(${a})(${c}) = ${b2} ${fourAC >= 0 ? '− ' + fourAC : '+ ' + Math.abs(fourAC)}`;
+      document.getElementById("shelfDiscDetail").textContent = detailText;
+
+      let rootStr = D >= 0 ? ` (√D = ${Math.sqrt(D) % 1 === 0 ? Math.sqrt(D) : Math.sqrt(D).toFixed(2)})` : " (No real roots)";
+      document.getElementById("shelfDiscVal").textContent = `D = ${D}${rootStr}`;
+
+      const d1 = Math.max(1, Math.abs(studioState.slots.slotDenom1 || 4));
+      const d2 = Math.max(1, Math.abs(studioState.slots.slotDenom2 || 3));
+
+      document.getElementById("slotDenom1").textContent = d1;
+      document.getElementById("slotDenom2").textContent = d2;
+
+      const gcd = (x, y) => (!y ? x : gcd(y, x % y));
+      const lcm = (d1 * d2) / gcd(d1, d2);
+
+      document.getElementById("shelfLcmDetail").textContent = `Smallest positive multiple of both ${d1} and ${d2}`;
+      document.getElementById("shelfLcmVal").textContent = `LCD = ${lcm}`;
+    }
+
+    // Keypad Modal Logic
+    function openKeypadModal(slotKey, slotLabel) {
+      studioState.activeSlotTarget = slotKey;
+      const curVal = studioState.slots[slotKey] || 0;
+      document.getElementById("keypadModalTitle").textContent = `Enter Value for ${slotLabel}`;
+      const input = document.getElementById("keypadNativeInput");
+      input.value = curVal;
+      document.getElementById("keypadModal").classList.add("active");
+      input.focus();
+    }
+
+    function closeKeypadModal() {
+      document.getElementById("keypadModal").classList.remove("active");
+      studioState.activeSlotTarget = null;
+    }
+
+    function confirmKeypadValue() {
+      const input = document.getElementById("keypadNativeInput");
+      const val = parseInt(input.value, 10) || 0;
+      if (studioState.activeSlotTarget) {
+        studioState.slots[studioState.activeSlotTarget] = val;
+        document.getElementById(studioState.activeSlotTarget).textContent = val;
+        updateShelfCalculations();
+        playAudioTone("pill");
+      }
+      closeKeypadModal();
+    }
+
+    function keypadAppend(digitStr) {
+      const input = document.getElementById("keypadNativeInput");
+      if (input.value === "0" || input.value === "") input.value = digitStr;
+      else input.value += digitStr;
+    }
+
+    function keypadBackspace() {
+      const input = document.getElementById("keypadNativeInput");
+      if (input.value.length > 1) input.value = input.value.slice(0, -1);
+      else input.value = "0";
+    }
+
+    function keypadToggleSign() {
+      const input = document.getElementById("keypadNativeInput");
+      if (input.value.startsWith("-")) input.value = input.value.slice(1);
+      else if (input.value !== "0") input.value = "-" + input.value;
+    }
+
+    function keypadAddJump(delta) {
+      const input = document.getElementById("keypadNativeInput");
+      const cur = parseInt(input.value, 10) || 0;
+      input.value = cur + delta;
+    }
+
+    // Voice Scratchpad
+    const btnVoiceRecord = document.getElementById("btnVoiceRecord");
+    const voiceDisplay = document.getElementById("voiceNoteDisplay");
+    let recognition = null;
+    let isRecording = false;
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        isRecording = true;
+        btnVoiceRecord.classList.add("recording");
+        btnVoiceRecord.querySelector("span").textContent = "🔴 Listening... (Speak now)";
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        voiceDisplay.textContent = `📝 Note: "${transcript}"`;
+        playAudioTone("complete");
+      };
+
+      recognition.onerror = () => {
+        voiceDisplay.textContent = `Note audio: Tap again to dictate.`;
+        btnVoiceRecord.classList.remove("recording");
+        btnVoiceRecord.querySelector("span").textContent = "🎙️ Record Voice Note";
+        isRecording = false;
+      };
+
+      recognition.onend = () => {
+        isRecording = false;
+        btnVoiceRecord.classList.remove("recording");
+        btnVoiceRecord.querySelector("span").textContent = "🎙️ Record Voice Note";
+      };
+
+      btnVoiceRecord.addEventListener("click", () => {
+        if (!isRecording) {
+          try { recognition.start(); } catch(e){}
+        } else {
+          recognition.stop();
+        }
+      });
+    } else {
+      btnVoiceRecord.addEventListener("click", () => {
+        const text = prompt("Enter note (or use speech-to-text on your keyboard):");
+        if (text) voiceDisplay.textContent = `📝 Note: "${text}"`;
+      });
+    }
+
+    /**
+     * ============================================================================
+     * 9. TOAST & ACCESSIBILITY CONTROLLERS
+     * ============================================================================
+     */
+    let toastTimeout = null;
+    function showUndoToast(message, undoCallback) {
+      const toast = document.getElementById("undoToast");
+      const msgElem = document.getElementById("undoToastMsg");
+      const btnUndo = document.getElementById("btnUndoToast");
+
+      msgElem.textContent = message;
+      toast.classList.add("show");
+
+      btnUndo.onclick = () => {
+        toast.classList.remove("show");
+        if (undoCallback) undoCallback();
+      };
+
+      if (toastTimeout) clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.remove("show");
+      }, 5000);
+    }
+
     document.getElementById("contrastToggleBtn").addEventListener("click", function() {
       const isHigh = document.body.classList.toggle("high-contrast");
       this.setAttribute("aria-pressed", isHigh ? "true" : "false");
-      try {
-        localStorage.setItem(STORAGE_KEY_CONTRAST, isHigh ? "true" : "false");
-      } catch (e) {}
+      try { localStorage.setItem(STORAGE_KEY_CONTRAST, isHigh ? "true" : "false"); } catch (e) {}
     });
 
     document.getElementById("textSizeToggleBtn").addEventListener("click", function() {
       const isLarge = document.body.classList.toggle("text-xl");
       this.setAttribute("aria-pressed", isLarge ? "true" : "false");
-      try {
-        localStorage.setItem(STORAGE_KEY_TEXT_SIZE, isLarge ? "true" : "false");
-      } catch (e) {}
+      try { localStorage.setItem(STORAGE_KEY_TEXT_SIZE, isLarge ? "true" : "false"); } catch (e) {}
     });
 
-    // Keyboard Shortcuts (Space or Right Arrow for Next Step, Left Arrow for Previous)
     window.addEventListener("keydown", (e) => {
-      const guidedActive = document.getElementById("guidedView").classList.contains("active");
-      if (!guidedActive) return;
-
-      // Don't trigger if user is interacting with an input or button
-      if (["BUTTON", "A", "INPUT"].includes(document.activeElement.tagName)) {
-        return;
-      }
-
-      if (e.key === "ArrowRight" || e.key === " ") {
-        e.preventDefault();
-        const card = PROCEDURE_CARDS.find(c => c.id === appState.activeCardId);
-        if (card && appState.currentStepIndex < card.steps.length) {
+      const guidedSub = document.getElementById("guidedSubView");
+      if (studioState.activeModule === "stepCardsView" && guidedSub && guidedSub.style.display !== "none") {
+        if (["BUTTON", "A", "INPUT"].includes(document.activeElement.tagName)) return;
+        if (e.key === "ArrowRight" || e.key === " ") {
+          e.preventDefault();
           handleNextStep();
+        } else if (e.key === "ArrowLeft") {
+          e.preventDefault();
+          handlePrevStep();
         }
-      } else if (e.key === "ArrowLeft") {
-        e.preventDefault();
-        handlePrevStep();
       }
     });
 
-    // Initialize App
     loadSavedState();
-    renderLibrary();
+    switchModule("hubView");
   </script>
 </body>
 </html>
